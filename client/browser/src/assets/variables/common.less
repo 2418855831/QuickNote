@@ -1,0 +1,60 @@
+// colors
+@red: #e93838;
+@dark: #0f2e47;
+@dark-less: rgb(55,62,67);
+@gray: rgb(106,115,125);
+@gray-less: rgb(235, 235, 235);
+@light: #959da5;
+@blue: rgb(0,122,204);
+@error: #ac4142;
+@accent: #04a9ff;
+@orange: #F4C691;
+@orange-less: #F9E5C7;
+@white: rgb(255, 255, 255);
+@white-less: rgb(242,245,247);
+@black: rgb(0, 0, 0);
+
+// size
+@sidebar-width: 16vw;
+@sidebar-header-height: 12vh;
+@icon-size: 14px;
+
+// fonts
+@font-face {
+  font-family: "octicons";
+  src: url("/static/fonts/octicons.woff2") format("woff2");
+}
+
+// icon names
+@icons-pin: '\f041';
+@icons-gear: '\f02f';
+@icons-file-directory: '\f016';
+@icons-file-text: '\f011';
+@icons-chevron-left: '\f0a4';
+@icons-chevron-right: '\f078';
+@icons-chevron-down: '\f0a3';
+
+// icon creator
+.icon-creator(@code; @font-family: octicons; @color: @gray; @hover-color: @error; @font-size: 14px; @width: 16px; @top: 0) {
+  position: relative;
+
+  &:before {
+    content: @code;
+    font-family: @font-family;
+    color: @color;
+    font-size: @font-size;
+    font-weight: normal;
+    font-style: normal;
+    text-align: center;
+    width: @width;
+    line-height: 1;
+    position: relative;
+    top: @top;
+    display: inline-block;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  &:hover:before {
+    color: @hover-color;
+  }
+}
