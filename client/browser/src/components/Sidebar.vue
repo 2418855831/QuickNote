@@ -15,6 +15,7 @@
 
 <script>
 import '../../static/ztree/js/jquery.ztree.core.min.js'
+import '../../static/ztree/js/jquery.ztree.exedit.min.js'
 import '../../static/ztree/css/ztree.css'
 export default {
   name: 'Sidebar',
@@ -65,9 +66,15 @@ export default {
         selectedMulti: false,
         dblClickExpand: false
       },
+      edit: {
+        enable: true
+      },
       callback: {
         beforeClick (treeId, treeNode, clickFlag) {
           return !(treeNode.isParent && _this.tree.expandNode(treeNode))
+        },
+        beforeRemove (treeId, treeNode) {
+          return confirm('Are you sure you want to delete it?')
         },
         onClick (event, treeId, treeNode) {
           _this.tree.currentNode = treeNode

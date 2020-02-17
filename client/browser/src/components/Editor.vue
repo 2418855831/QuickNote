@@ -12,7 +12,7 @@
     <!--状态栏-->
     <div class="status-bar">
       <ul class="status-content">
-        <li class="status-item status-item-left">Markdown</li>
+        <li class="status-item status-item-left"><i class="markdown-icon"></i>&nbsp;Markdown</li>
         <li class="status-item">Lines: {{ linesCount }}</li>
         <li class="status-item">Characters: {{ charactersCount }}</li>
       </ul>
@@ -98,6 +98,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@import '../assets/variables/common.less';
 .editor {
   width: 100%;
   height: 100%;
@@ -133,10 +134,10 @@ export default {
     bottom: 0;
     right: 0;
     width: 100vw;
-    height: 20px;
+    height: 1.25rem;
     z-index: 1500;
     color: white;
-    background-color: rgba(0, 122, 204, 1);
+    background-color: @blue;
     font-size: 0.75rem;
 
     .status-content {

@@ -11,7 +11,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "./assets/variables/icons.less";
+@import "./assets/variables/ztree-icons.less";
 
 * {
   margin: 0;
