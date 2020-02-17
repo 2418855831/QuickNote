@@ -23,6 +23,7 @@ export default {
   },
   data () {
     return {
+      tree: {},
       nodes: this.propNodes || []
     }
   },
@@ -41,12 +42,12 @@ export default {
       if ($('.sidebar-pinned').length) {
         // unfix sidebar
         $('.sidebar-pin').removeClass('sidebar-pinned')
-        $('html').css('padding-left', '0vw')
+        $('#app').css('padding-left', '0vw')
         $('.sidebar').on('mouseleave', sidebarCollapse)
       } else {
         // fix sidebar
         $('.sidebar-pin').addClass('sidebar-pinned')
-        $('html').css('padding-left', '16vw')
+        $('#app').css('padding-left', '16vw')
         $('.sidebar').off('mouseleave', sidebarCollapse)
       }
     }
@@ -56,92 +57,24 @@ export default {
     $('.sidebar-pin').on('click', sidebarFix)
 
     // initialize zTree
-    let zTreeObj
+    let _this = this
     let setting = {
       view: {
         showLine: false,
+        showTitle: false,
         selectedMulti: false,
         dblClickExpand: false
       },
       callback: {
         beforeClick (treeId, treeNode, clickFlag) {
-          return zTreeObj.expandNode(treeNode) === null
+          return !(treeNode.isParent && _this.tree.expandNode(treeNode))
+        },
+        onClick (event, treeId, treeNode) {
+          _this.tree.currentNode = treeNode
         }
       }
     }
-    /*
-    let zNodes = [
-      {
-        name: 'dir1',
-        children: [
-          { name: 'test1_1' },
-          { name: 'test1_2' },
-          { name: 'test1_3' },
-          {
-            name: 'subdir1_1',
-            children: [
-              {
-                name: 'subdir1_1_1',
-                children: [
-                  {
-                    name: 'subdir1_1_1_1',
-                    children: [
-                      { name: 'subdir1_1_1_1_1' }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        name: 'dir2',
-        children: [
-          { name: 'test2_1' },
-          { name: 'test2_2' }
-        ]
-      },
-      {
-        name: 'dir3',
-        children: [
-          { name: 'test3_1' },
-          { name: 'test3_2' },
-          { name: 'test3_3' }
-        ]
-      },
-      {
-        name: 'dir4',
-        children: [
-          { name: 'test4_1' },
-          { name: 'test4_2' },
-          { name: 'test4_3' },
-          {
-            name: 'subdir4_1',
-            children: [
-              { name: 'test4_4' }
-            ]
-          }
-        ]
-      },
-      {
-        name: 'dir5',
-        children: [
-          { name: 'test5_1' },
-          { name: 'test5_2' },
-          { name: 'test5_3' },
-          {
-            name: 'subdir5_1',
-            children: [
-              { name: 'test5_4' }
-            ]
-          }
-        ]
-      }
-    ]
-    */
-    console.log(this.nodes)
-    zTreeObj = $.fn.zTree.init($('#tree'), setting, this.nodes)
+    this.tree = $.fn.zTree.init($('#tree'), setting, this.nodes)
   }
 }
 </script>
@@ -160,8 +93,8 @@ export default {
   overflow: visible;
   box-sizing: border-box;
   border-right: 1px solid @gray-less;
-  z-index: 1501;
-  transform: translate3d(-100%, 0px, 0px);
+  z-index: @base-index + 1;
+  transform: translate(-100%, 0px);
   transition: transform 0.3s ease-in 0s;
 
   .sidebar-toggle {
@@ -208,7 +141,7 @@ export default {
   }
 
   &.sidebar-show {
-    transform: translate3d(0px, 0px, 0px);
+    transform: translate(0px, 0px);
     transition: transform 0.2s ease 0s;
 
     .sidebar-toggle {

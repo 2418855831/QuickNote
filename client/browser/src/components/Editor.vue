@@ -8,11 +8,11 @@
       </div>
     </div>
     <!--编辑器和预览器-->
-    <mavon-editor class="mavon-editor" :toolbars="markdownOption" v-model="content"/>
+    <mavon-editor class="mavon-editor" :toolbars="markdownOption" @save="save" v-model="content"/>
     <!--状态栏-->
     <div class="status-bar">
       <ul class="status-content">
-        <li class="status-item mr-auto">Markdown</li>
+        <li class="status-item status-item-left">Markdown</li>
         <li class="status-item">Lines: {{ linesCount }}</li>
         <li class="status-item">Characters: {{ charactersCount }}</li>
       </ul>
@@ -88,6 +88,11 @@ export default {
       let match = this.content.split(/[^\r\n|\n|\r]/)
       return match ? match.length - 1 : 0
     }
+  },
+  methods: {
+    save (content, render) {
+      this.$emit('save', this.title, content)
+    }
   }
 }
 </script>
@@ -125,9 +130,10 @@ export default {
 
   .status-bar {
     position: fixed;
+    bottom: 0;
+    right: 0;
     width: 100vw;
     height: 20px;
-    bottom: 0;
     z-index: 1500;
     color: white;
     background-color: rgba(0, 122, 204, 1);
@@ -141,6 +147,10 @@ export default {
       .status-item {
         display: inline-flex;
         margin: 0 0.5rem;
+      }
+
+      .status-item-left {
+        margin-right: auto;
       }
     }
   }

@@ -1,7 +1,7 @@
 <template>
   <div class="note">
-    <Sidebar :propNodes="nodes"></Sidebar>
-    <Editor :propTitle="title" :propContent="content"></Editor>
+    <Sidebar :propNodes="nodes" ref="sidebar"></Sidebar>
+    <Editor :propTitle="title" :propContent="content" @save="save"></Editor>
   </div>
 </template>
 
@@ -87,6 +87,18 @@ export default {
           ]
         }
       ]
+    }
+  },
+  methods: {
+    save (title, content) {
+      let currentNode = this.$refs.sidebar.tree.currentNode
+      if (!currentNode) {
+        alert('TODO: Please select a path to save.')
+        return
+      }
+      let path = currentNode.getPath().map(node => node.name)
+      alert('TODO: Saved.')
+      console.log(path)
     }
   }
 }

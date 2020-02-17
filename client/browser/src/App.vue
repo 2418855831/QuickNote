@@ -16,12 +16,15 @@ export default {
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 html, body {
   width: 100%;
   height: 100%;
   overflow-x: hidden;
+  font-size: 16px;
+  line-height: 1.5;
 }
 
 #app {
@@ -31,6 +34,5 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
 }
 </style>
