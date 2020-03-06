@@ -4,6 +4,7 @@
     <div class="sidebar-toggle">>展开目录</div>
     <!--侧栏头部-->
     <div class="sidebar-header">
+      <span class="sidebar-plus plus-icon" @click="createNode(true)"></span>
       <span class="sidebar-pin pin-icon"></span>
     </div>
     <!--侧栏中部-->
@@ -24,12 +25,13 @@ export default {
   },
   data () {
     return {
-      tree: {},
-      nodes: this.propNodes || []
+      tree: {}, // 树形控件
+      nodes: this.propNodes || [], // 初始化树形控件的节点数据
+      newCategoryNumber: 1 // 新建分类的编号
     }
   },
   mounted () {
-    // Setup event handler.
+    // 创建侧边栏事件处理函数
     function sidebarExpand () {
       // expand sidebar
       $('.sidebar').addClass('sidebar-show')
@@ -57,7 +59,7 @@ export default {
     $('.sidebar').on('mouseleave', sidebarCollapse)
     $('.sidebar-pin').on('click', sidebarFix)
 
-    // initialize zTree
+    // 初始化 zTree
     let _this = this
     let setting = {
       view: {
@@ -73,15 +75,51 @@ export default {
         beforeClick (treeId, treeNode, clickFlag) {
           return !(treeNode.isParent && _this.tree.expandNode(treeNode))
         },
-        beforeRemove (treeId, treeNode) {
-          return confirm('Are you sure you want to delete it?')
-        },
         onClick (event, treeId, treeNode) {
           _this.tree.currentNode = treeNode
+        },
+        onRename (event, treeId, treeNode, isCancel) {
+          if (!isCancel) {
+            _this.renameNode(treeNode)
+          }
+        },
+        onRemove (event, treeId, treeNode) {
+          _this.deleteNode(treeNode)
         }
       }
     }
     this.tree = $.fn.zTree.init($('#tree'), setting, this.nodes)
+  },
+  methods: {
+    createNode (isParent) {
+      /**
+       * 创建新的节点
+       * @param {bool} isParent 是否为父节点
+       * @returns undefined
+       */
+      let categoryName = 'new category ' + this.newCategoryNumber
+      this.$emit('createNode', categoryName, isParent)
+      this.tree.addNodes(null, { name: categoryName, children: [] }, false)
+      this.newCategoryNumber++
+    },
+    renameNode (treeNode) {
+      /**
+       * 重命名节点
+       * @param {bool} treeNode 即将被重命名的节点
+       * @returns undefined
+       */
+      let path = treeNode.getPath().map(node => node.name).join('/')
+      this.$emit('renameNode', path, treeNode.isParent, treeNode.name)
+    },
+    deleteNode (treeNode) {
+      /**
+       * 删除节点
+       * @param treeNode 即将被删除的节点
+       * @returns undefined
+       */
+      let path = treeNode.getPath().map(node => node.name).join('/')
+      this.$emit('deleteNode', path, treeNode.isParent)
+    }
   }
 }
 </script>
@@ -90,10 +128,10 @@ export default {
 @import "../assets/variables/common.less";
 .sidebar {
   position: fixed;
-  top: 0px !important;
-  left: 0px !important;
-  right: 0px !important;
-  bottom: 0px !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
   width: @sidebar-width;
   height: 100vh;
   padding-top: @sidebar-header-height;
@@ -121,11 +159,18 @@ export default {
 
   .sidebar-header {
     position: absolute;
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
     width: @sidebar-width;
     height: @sidebar-header-height;
     background-color: @dark-less;
+
+    .sidebar-plus {
+      position: absolute;
+      top: @icon-size;
+      right: 3 * @icon-size;
+      cursor: pointer;
+    }
 
     .sidebar-pin {
       position: absolute;
