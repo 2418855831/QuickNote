@@ -4,7 +4,7 @@
     <div class="sidebar-toggle">>展开目录</div>
     <!--侧栏头部-->
     <div class="sidebar-header">
-      <span class="sidebar-plus plus-icon" @click="createNode(true)"></span>
+      <span class="sidebar-plus plus-icon" @click="createNode(null, true)"></span>
       <span class="sidebar-pin pin-icon"></span>
     </div>
     <!--侧栏中部-->
@@ -27,7 +27,7 @@ export default {
     return {
       tree: {}, // 树形控件
       nodes: this.propNodes || [], // 初始化树形控件的节点数据
-      newCategoryNumber: 1 // 新建分类的编号
+      newNumber: 1 // 新建分类的编号
     }
   },
   mounted () {
@@ -66,16 +66,49 @@ export default {
         showLine: false,
         showTitle: false,
         selectedMulti: false,
-        dblClickExpand: false
+        dblClickExpand: false,
+        addHoverDom: (treeId, treeNode) => {
+          // 检查当前节点是否处于编辑状态或者自定义按钮是否已经被创建过了
+          if (treeNode.editNameFlag ||
+            $('#' + treeNode.tId + '_create_file').index() > 0 ||
+            $('#' + treeNode.tId + '_create_directory').index() > 0) {
+            return
+          }
+          // 当前指向的DOM节点
+          let currentNode = $('#' + treeNode.tId + '_span')
+          // 创建文档/目录按钮
+          let createFileStr = '<span class="button create-file" id="' + treeNode.tId + '_create_file' + '" ></span>'
+          let createDirectoryStr = '<span class="button create-directory" id="' + treeNode.tId + '_create_directory' + '" ></span>'
+          currentNode.after(createDirectoryStr)
+          currentNode.after(createFileStr)
+          let createFileButton = $('#' + treeNode.tId + '_create_file')
+          let createDirectoryButton = $('#' + treeNode.tId + '_create_directory')
+          if (createFileButton) {
+            createFileButton.on('click', function () {
+              _this.createNode(treeNode, false)
+            })
+          }
+          if (createDirectoryButton) {
+            createDirectoryButton.on('click', function () {
+              _this.createNode(treeNode, true)
+            })
+          }
+        },
+        removeHoverDom: (treeId, treeNode) => {
+          $('#' + treeNode.tId + '_create_file').off().remove()
+          $('#' + treeNode.tId + '_create_directory').off().remove()
+        }
       },
       edit: {
-        enable: true
+        enable: true,
+        renameTitle: '',
+        removeTitle: ''
       },
       callback: {
-        beforeClick (treeId, treeNode, clickFlag) {
-          return !(treeNode.isParent && _this.tree.expandNode(treeNode))
-        },
         onClick (event, treeId, treeNode) {
+          if (!treeNode.isParent) {
+            _this.$emit('get', treeNode.getPath().map(node => node.name).join('/'))
+          }
           _this.tree.currentNode = treeNode
         },
         onRename (event, treeId, treeNode, isCancel) {
@@ -91,16 +124,28 @@ export default {
     this.tree = $.fn.zTree.init($('#tree'), setting, this.nodes)
   },
   methods: {
-    createNode (isParent) {
+    createNode (parentNode, isParent) {
       /**
        * 创建新的节点
+       * @param {node} parentNode 即将被新建的节点的父节点
        * @param {bool} isParent 是否为父节点
        * @returns undefined
        */
-      let categoryName = 'new category ' + this.newCategoryNumber
-      this.$emit('createNode', categoryName, isParent)
-      this.tree.addNodes(null, { name: categoryName, children: [] }, false)
-      this.newCategoryNumber++
+      let newNodeName = 'new ' + this.newNumber
+      if (!parentNode) { // 创建根节点
+        let path = newNodeName
+        this.$emit('createNode', path, true)
+        this.tree.addNodes(null, { name: path, children: [] })
+      } else if (isParent) { // 创建父节点
+        let path = parentNode.getPath().map(node => node.name).join('/') + '/' + newNodeName
+        this.$emit('createNode', path, true)
+        this.tree.addNodes(parentNode, { name: newNodeName, children: [] })
+      } else { // 创建叶节点
+        let path = parentNode.getPath().map(node => node.name).join('/') + '/' + newNodeName
+        this.$emit('createNode', path, false)
+        this.tree.addNodes(parentNode, { name: newNodeName })
+      }
+      this.newNumber++
     },
     renameNode (treeNode) {
       /**
@@ -189,7 +234,8 @@ export default {
     width: 100%;
     height: 100%;
     background-color: @white-less;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: scroll;
   }
 
   &.sidebar-show {

@@ -12,6 +12,7 @@ export default new Vuex.Store({
     apiURL: {
       blogs_index: 'api/blogs',
       blogs_create: 'api/blogs/create',
+      blogs_save: 'api/blogs/save',
       blogs_rename: 'api/blogs/rename',
       blogs_delete: 'api/blogs/delete',
       blogs_dirs_index: 'api/blogs/dirs',

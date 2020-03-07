@@ -1,11 +1,17 @@
 <template>
   <div class="note">
     <Sidebar v-if="nodes"
-             :propNodes="nodes" ref="sidebar"
+             :propNodes="nodes"
+             ref="sidebar"
+             @get="getBlog"
              @createNode="createNode"
              @renameNode="renameNode"
              @deleteNode="deleteNode"></Sidebar>
-    <Editor :propTitle="title" :propContent="content" @save="save" ref="editor"></Editor>
+    <Editor :key="editorKey"
+            :propTitle="title"
+            :propContent="content"
+            ref="editor"
+            @save="saveBlog"></Editor>
   </div>
 </template>
 
@@ -22,7 +28,8 @@ export default {
     return {
       title: '随便整的一个标题',
       content: '```c\n int main(){} \n```',
-      nodes: null
+      nodes: null,
+      editorKey: false
     }
   },
   methods: {
@@ -33,16 +40,21 @@ export default {
        * @param {bool} isParent 是否为父节点
        * @returns undefined
        */
-      let res = await this.axios({
+      let data = {
+        author: 'a',
+        path: path
+      }
+      if (!isParent) {
+        data['title'] = ''
+        data['content'] = ''
+      }
+
+      await this.axios({
         method: 'post',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         url: isParent ? this.$store.state.apiURL.blogs_dirs_create : this.$store.state.apiURL.blogs_create,
-        data: this.$qs.stringify({
-          author: 'a',
-          path: path
-        })
+        data: this.$qs.stringify(data)
       })
-      console.log(res)
     },
     async renameNode (path, isParent, newName) {
       /**
@@ -52,7 +64,7 @@ export default {
        * @param {string} newName 节点的新名称
        * @returns null
        */
-      let res = await this.axios({
+      await this.axios({
         method: 'put',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         url: isParent ? this.$store.state.apiURL.blogs_dirs_rename : this.$store.state.apiURL.blogs_rename,
@@ -62,7 +74,6 @@ export default {
           newName: newName
         })
       })
-      console.log(res)
     },
     async deleteNode (path, isParent) {
       /**
@@ -71,7 +82,7 @@ export default {
        * @param {bool} isParent 是否为父节点
        * @returns undefined
        */
-      let res = await this.axios({
+      await this.axios({
         method: 'delete',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         url: isParent ? this.$store.state.apiURL.blogs_dirs_delete : this.$store.state.apiURL.blogs_delete,
@@ -80,34 +91,45 @@ export default {
           path: path
         })
       })
-      console.log(res)
     },
-    async save (title, content) {
-      // Get blog's path.
+    async getBlog (path) {
+      let res = await this.axios({
+        method: 'get',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        url: this.$store.state.apiURL.blogs_index,
+        params: {
+          author: 'a',
+          path: path
+        }
+      })
+      if (res.status === 200) {
+        this.title = res.data.title
+        this.content = res.data.content
+        this.editorKey = !this.editorKey // 更新编辑器
+      }
+    },
+    async saveBlog (title, content) {
+      // 获得节点路径
       let currentNode = this.$refs.sidebar.tree.currentNode
-      if (!currentNode) {
-        alert('TODO: Please select a path to save.')
+      if (!currentNode || currentNode.isParent) {
+        alert('TODO: Please select a file to save.')
         return
       }
-      // let path = currentNode.getPath().map(node => node.name).join('/')
+      let path = currentNode.getPath().map(node => node.name).join('/')
 
-      // Post blog.
-      await this.axios({
-        method: 'post',
+      // 保存博客
+      let res = await this.axios({
+        method: 'put',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        url: this.$store.state.apiURL.blog,
+        url: this.$store.state.apiURL.blogs_save,
         data: this.$qs.stringify({
           author: 'a',
           title: this.$refs.editor.title || '',
           content: this.$refs.editor.content || '',
-          path: 'dir1'
+          path: path
         })
       })
-        .then(() => alert('Saved successfully!'))
-        .catch((error) => {
-          console.error(error)
-          alert('Failed to save!')
-        })
+      console.log(res)
     }
   },
   async created () {
@@ -115,11 +137,10 @@ export default {
       method: 'get',
       url: this.$store.state.apiURL.blogs_dirs_index,
       params: {
-        author: 'b'
+        author: 'a'
       }
     })
     this.nodes = res.data
-    console.log(res.data)
   }
 }
 </script>
