@@ -26,8 +26,8 @@ export default {
   },
   data () {
     return {
-      title: '随便整的一个标题',
-      content: '```c\n int main(){} \n```',
+      title: '',
+      content: '',
       nodes: null,
       editorKey: false
     }

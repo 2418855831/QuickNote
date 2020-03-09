@@ -7,6 +7,8 @@ import store from './store'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import qs from 'qs'
+// eslint-disable-next-line
+import $ from 'jquery'
 // import 'bootstrap/dist/js/bootstrap.min.js'
 // import 'bootstrap/dist/css/bootstrap.min.css'
 

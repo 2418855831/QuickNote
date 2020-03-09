@@ -15,16 +15,3 @@
 > API接口设计并没有遵循RESTful，私以为RESTful能表示的语义有限，太多的特殊语义不好表示（我太菜了）。
 >
 > API接口的设计参照的是Github上Germey的项目[Gerapy](https://github.com/Gerapy/Gerapy/blob/master/gerapy/server/core/urls.py)，大致的风格是：`api/resource/operation`
-
-| 方法 | 资源路径   | 参数 | 说明           |
-| ---- | ---------- | ---- | -------------- |
-| get  | /api/blogs |      | 获取所有的博客 |
-| post | /api/blogs |      | 上传博客       |
-|      |            |      |                |
-|      |            |      |                |
-|      |            |      |                |
-|      |            |      |                |
-|      |            |      |                |
-|      |            |      |                |
-|      |            |      |                |
-

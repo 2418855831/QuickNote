@@ -15,26 +15,23 @@ BLOG_PATH = settings.BASE_DIR + '/db/blog_path/'
 def index(request):
     """
     获取所有博客或者指定博客
-    :param request: author, path
+    不给参数: 随便推送一定数量的博客
+    给定author: 获取该作者的所有博客
+    给定author和path: 获取该作者的某一篇博客
+    :param request: [author], [path]
     :return: json
     """
-    try:
-        author = request.GET['author']
-        path = request.GET.get('path')
-    except KeyError as e:
-        return JsonResponse({
-            'error': '缺少键为%s的数据' % str(e)
-        })
+    author = request.GET.get('author')
+    path = request.GET.get('path')
 
-    # 检查路径节点数目是否正确
-    node_names = path.split('/')
-    if len(node_names) <= 1:
-        return JsonResponse({
-            'error': '路径不能为空，也不能为根目录'
-        })
-
-    if path:
+    if author and path:
         # 获取指定博客
+        # 检查路径节点数目是否正确
+        node_names = path.split('/')
+        if len(node_names) <= 1:
+            return JsonResponse({
+                'error': '路径不能为空，也不能为根目录'
+            })
         # 根据作者名找到相应的JSON文件
         blog_path = BLOG_PATH + author + '.json'
         try:
@@ -74,10 +71,27 @@ def index(request):
                 'error': '不存在该博客'
             })
 
-    return JsonResponse({
-        'title': blog.title,
-        'content': blog.content
-    })
+        response = JsonResponse({
+            'title': blog.title,
+            'content': blog.content
+        })
+    elif author:
+        # 获取该作者的所有博客
+        pass
+    else:
+        # 随机推送一定数量的博客
+        # TODO: 推送算法
+        # 这里先实现为推送ID为前10的博客
+        blogs_set = BlogModel.objects.all()[:10]
+        blogs = [{
+            'id': blog.id,
+            'author': blog.author,
+            'title': blog.title,
+            'content': blog.content
+        } for blog in blogs_set]
+        response = JsonResponse(blogs, safe=False)
+
+    return response
 
 
 @require_http_methods(['POST'])
@@ -270,7 +284,7 @@ def save(request):
 
     # 更新数据库
     blog_id = parent['id']
-    BlogModel.objects.update(id=blog_id, title=title, content=content)
+    BlogModel.objects.filter(id=blog_id).update(title=title, content=content)
 
     blog_file = open(blog_path, 'w')
     json.dump(blog_json, blog_file)

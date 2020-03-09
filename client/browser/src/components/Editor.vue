@@ -3,12 +3,16 @@
     <!--标题栏-->
     <div class="title-bar">
       <div class="title-input-container">
-        <input class="title-input" type="text" placeholder="标题" v-model="title" maxlength="100" required>
-        <span class="title-counter">{{ titleCharactersCount }}/100</span>
+        <input class="title-input" type="text" placeholder="标题" v-model="title" maxlength="20" required>
+        <span class="title-counter">{{ titleCharactersCount }}/20</span>
       </div>
     </div>
     <!--编辑器和预览器-->
-    <mavon-editor class="mavon-editor" :toolbars="markdownOption" @save="save" v-model="content"/>
+    <mavon-editor class="mavon-editor"
+                  :toolbars="markdownOption"
+                  @save="save"
+                  v-model="content">
+    </mavon-editor>
     <!--状态栏-->
     <div class="status-bar">
       <ul class="status-content">
@@ -26,8 +30,14 @@ import 'mavon-editor/dist/css/index.css'
 export default {
   name: 'Editor',
   props: {
-    propTitle: String,
-    propContent: String
+    propTitle: {
+      type: String,
+      default: ''
+    },
+    propContent: {
+      type: String,
+      default: ''
+    }
   },
   components: {
     'mavon-editor': mavonEditor
@@ -69,8 +79,8 @@ export default {
         subfield: true, // 单双栏模式
         preview: false // 预览
       },
-      title: this.propTitle || '',
-      content: this.propContent || ''
+      title: this.propTitle,
+      content: this.propContent
     }
   },
   computed: {

@@ -8,6 +8,11 @@ export default new Router({
   routes: [
     {
       path: '',
+      name: 'Home',
+      component: () => import('@/views/Home')
+    },
+    {
+      path: '/note',
       name: 'Note',
       component: () => import('@/views/Note')
     },
@@ -15,6 +20,11 @@ export default new Router({
       path: '/editor',
       name: 'Editor',
       component: () => import('@/components/Editor')
+    },
+    {
+      path: '/previewer',
+      name: 'Previewer',
+      component: () => import('@/components/Previewer')
     },
     {
       path: '/sidebar',
