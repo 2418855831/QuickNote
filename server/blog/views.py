@@ -1,14 +1,14 @@
 import json
+import sys
 
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse, QueryDict
 from django.views.decorators.http import require_http_methods
-from django.core.exceptions import ObjectDoesNotExist
 
 from .models import Blog as BlogModel
 
-
-BLOG_PATH = settings.BASE_DIR + '/db/blog_path/'
+BLOG_PATH = settings.BASE_DIR + ('/db/blog_path/' if 'test' not in sys.argv else '/db/test_blog_path/')
 
 
 @require_http_methods(['GET'])
@@ -18,11 +18,13 @@ def index(request):
     不给参数: 随便推送一定数量的博客
     给定author: 获取该作者的所有博客
     给定author和path: 获取该作者的某一篇博客
-    :param request: [author], [path]
+    给定id：获取某一篇博客
+    :param request: author, path, id
     :return: json
     """
     author = request.GET.get('author')
     path = request.GET.get('path')
+    id = int(request.GET.get('id', 0))
 
     if author and path:
         # 获取指定博客
@@ -40,7 +42,7 @@ def index(request):
             blog_file.close()
         except FileNotFoundError:
             return JsonResponse({
-                'error': '不存在路径为%s的文件' % path
+                'error': '不存在路径为%s的博客' % path
             })
 
         nodes = blog_json['nodes']
@@ -72,6 +74,21 @@ def index(request):
             })
 
         response = JsonResponse({
+            'title': blog.title,
+            'content': blog.content
+        })
+    elif id:
+        # 查询数据库
+        try:
+            blog = BlogModel.objects.get(id=id)
+        except ObjectDoesNotExist:
+            return JsonResponse({
+                'error': '不存在id为%d博客' % id
+            })
+
+        response = JsonResponse({
+            'id': blog.id,
+            'author': blog.author,
             'title': blog.title,
             'content': blog.content
         })
@@ -231,64 +248,77 @@ def rename(request):
 def save(request):
     """
     保存博客
-    :param request: author, path, title, content
+    :param request: author, path | id, title, content
     :return: json
     """
     put = QueryDict(request.body)
     try:
         author = put['author']
-        path = put['path']
+        path = put.get('path')
+        id = int(put.get('id', 0))
         title = put['title']
         content = put['content']
     except KeyError as e:
         return JsonResponse({
             'error': '不存在键%s' % str(e)
         })
-
-    # 检查路径节点数目是否正确
-    node_names = path.split('/')
-    if len(node_names) <= 1:
+    except ValueError as e:
         return JsonResponse({
-            'error': '路径不能为空，也不能为根目录'
+            'error': 'id值必须为数字'
         })
 
-    # 根据作者名找到相应的JSON文件
-    blog_path = BLOG_PATH + author + '.json'
-    try:
-        blog_file = open(blog_path, 'r')
-        blog_json = json.load(blog_file)
-        blog_file.close()
-    except FileNotFoundError:
-        return JsonResponse({
-            'error': '不存在路径为%s的文件' % path
-        })
+    if id:
+        blog_id = id
+    elif path:
+        # 检查路径节点数目是否正确
+        node_names = path.split('/')
+        if len(node_names) <= 1:
+            return JsonResponse({
+                'error': '路径不能为空，也不能为根目录'
+            })
 
-    nodes = blog_json['nodes']
-    parent = None
-    for i in range(0, len(node_names)):
-        if parent:
-            break
-        for node in nodes:
-            if node['name'] == node_names[i]:
-                if i != len(node_names) - 1:
-                    nodes = node['children']
-                else:
-                    parent = node
+        # 根据作者名找到相应的JSON文件
+        blog_path = BLOG_PATH + author + '.json'
+        try:
+            blog_file = open(blog_path, 'r')
+            blog_json = json.load(blog_file)
+            blog_file.close()
+        except FileNotFoundError:
+            return JsonResponse({
+                'error': '不存在路径为%s的文件' % path
+            })
+
+        nodes = blog_json['nodes']
+        parent = None
+        for i in range(0, len(node_names)):
+            if parent:
                 break
+            for node in nodes:
+                if node['name'] == node_names[i]:
+                    if i != len(node_names) - 1:
+                        nodes = node['children']
+                    else:
+                        parent = node
+                    break
 
-    # 将博客路径信息保存到相应的JSON文件中
-    if not parent:
+        if not parent:
+            return JsonResponse({
+                'error': '不存在路径为%s的文件' % path
+            })
+
+        blog_id = parent['id']
+    else:
         return JsonResponse({
-            'error': '不存在路径为%s的文件' % path
+            'error': '保存博客必须给定path或id'
         })
 
-    # 更新数据库
-    blog_id = parent['id']
-    BlogModel.objects.filter(id=blog_id).update(title=title, content=content)
-
-    blog_file = open(blog_path, 'w')
-    json.dump(blog_json, blog_file)
-    blog_file.close()
+    blogs_set = BlogModel.objects.filter(id=blog_id)
+    if blogs_set.exists():
+        blogs_set.update(title=title, content=content)
+    else:
+        return JsonResponse({
+            'error': '不存在id为%d的博客' % id if id else '不存在path为%s的博客' % path
+        })
 
     return JsonResponse({
         'msg': '保存博客成功'
@@ -298,7 +328,7 @@ def save(request):
 @require_http_methods(['DELETE'])
 def delete(request):
     """
-    删除指定目录
+    删除指定博客
     :param request: author, path
     :return: json
     """
@@ -308,7 +338,7 @@ def delete(request):
         path = delete['path']
     except KeyError as e:
         return JsonResponse({
-            'error': str(e)
+            'error': '缺少键%s' % str(e)
         })
 
     # 检查路径节点数目是否正确
@@ -343,13 +373,13 @@ def delete(request):
     # 将博客路径信息保存到相应的JSON文件中
     if not parent or 'children' not in parent or len(parent['children']) == 0:
         return JsonResponse({
-            'error': '不存在路径名为%s的文件' % path
+            'error': '不存在路径为%s的博客' % path
         })
     else:
         position = [pos for pos, node in enumerate(parent['children']) if node['name'] == node_names[-1]]
         if not position:
             return JsonResponse({
-                'error': '不存在路径名为%s的文件' % path
+                'error': '不存在路径为%s的博客' % path
             })
     blog_info = parent['children'].pop(position[0])
 
@@ -532,7 +562,6 @@ def dirs_delete(request):
         return JsonResponse({
             'error': str(e)
         })
-
     # 根据作者名找到相应的JSON文件
     blog_path = BLOG_PATH + author + '.json'
     try:
@@ -562,10 +591,11 @@ def dirs_delete(request):
             res = [pos for pos, node in enumerate(nodes) if node['name'] == node_names[-1]]
             if len(res) != 1:
                 return JsonResponse({
-                    'error': '不存在路径为%s的目录'  % path
+                    'error': '不存在路径为%s的目录' % path
                 })
-            position = res[0]
-            nodes.pop(position)
+            else:
+                position = res[0]
+                blogs_root = nodes.pop(position)
         else:
             return JsonResponse({
                 'error': '不存在名为%s的路径' % path
@@ -576,12 +606,16 @@ def dirs_delete(request):
                 'error': '不存在名为%s的路径' % path
             })
         else:
-            position = [pos for pos, node in enumerate(parent['children']) if node['name'] == node_names[-1]]
-            if not position:
+            res = [pos for pos, node in enumerate(parent['children'])
+                        if node['name'] == node_names[-1] and 'id' not in node]
+            if not res:
                 return JsonResponse({
                     'error': '不存在路径名为%s的目录' % path
                 })
-    blogs_root = parent['children'].pop(position)
+            else:
+                position = res[0]
+                blogs_root = parent['children'].pop(position)
+
     blogs_nodes = [blogs_root]
     # 遍历即将删除的节点
     while blogs_nodes:
@@ -595,7 +629,6 @@ def dirs_delete(request):
         elif 'children' in blog_node:
             # 继续遍历子节点
             blogs_nodes.append([node for node in blog_node['children']])
-
 
     blog_file = open(blog_path, 'w')
     json.dump(blog_json, blog_file)
