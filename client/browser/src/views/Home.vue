@@ -1,14 +1,36 @@
 <template>
   <div class="home">
-    <div class="blog" v-for="blog in blogs" :key="blog.id">
+    <!--
+    <transition-group tag="div" name="fade" mode="out-in" appear class="blog" v-for="blog in blogs" :key="blog.id">
       <Previewer :propTitle="blog.title"
                  :propContent="blog.content"
-                 :propAuthor="blog.author"></Previewer>
-    </div>
+                 :propAuthor="blog.author"
+                 :key="blog.id"></Previewer>
+    </transition-group>
+    --->
+    <transition-group
+      v-if="blogs"
+      tag="div"
+      name="fade"
+      :css="false"
+      @before-enter="beforeEnter"
+      @enter="enter"
+      appear>
+      <div class="blog"
+           v-for="(blog, index) in blogs"
+           :key="blog.id"
+           :data-index="index">
+        <Previewer
+          :propTitle="blog.title"
+          :propContent="blog.content"
+          :propAuthor="blog.author"></Previewer>
+      </div>
+    </transition-group>
   </div>
 </template>
 
 <script>
+import Velocity from 'velocity-animate'
 import Previewer from '../components/Previewer'
 export default {
   name: 'Home',
@@ -17,44 +39,8 @@ export default {
   },
   data () {
     return {
-      blogs: [
-        {
-          id: 1,
-          title: '随便取得标题',
-          content: '随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容随便整的内容',
-          author: '狸吉',
-          createdDate: '2020-02-02',
-          commentsCount: 233,
-          lookedCount: 360
-        },
-        {
-          id: 2,
-          title: '随便取得标题',
-          content: '随便整的内容',
-          author: '狸吉',
-          createdDate: '2020-02-02',
-          commentsCount: 233,
-          lookedCount: 360
-        },
-        {
-          id: 3,
-          title: '随便取得标题',
-          content: '随便整的内容',
-          author: '狸吉',
-          createdDate: '2020-02-02',
-          commentsCount: 233,
-          lookedCount: 360
-        },
-        {
-          id: 4,
-          title: '随便取得标题',
-          content: '随便整的内容',
-          author: '狸吉',
-          createdDate: '2020-02-02',
-          commentsCount: 233,
-          lookedCount: 360
-        }
-      ] // 博客列表：作者，创建时间，观看数，评论数，文章概要
+      show: true,
+      blogs: [] // 博客列表：作者，创建时间，观看数，评论数，文章概要
     }
   },
   async created () {
@@ -64,6 +50,23 @@ export default {
     })
     if (res.status === 200) {
       this.blogs = res.data
+    }
+  },
+  methods: {
+    beforeEnter (el) {
+      el.style.opacity = 0
+    },
+    enter (el, done) {
+      let delay = el.dataset.index * 333
+      setTimeout(function () {
+        Velocity(
+          el,
+          { opacity: 1 },
+          { duration: '1000' },
+          { easing: 'easeInSine' },
+          { complete: done }
+        )
+      }, delay)
     }
   }
 }
