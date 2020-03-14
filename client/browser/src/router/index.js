@@ -12,24 +12,14 @@ export default new Router({
       component: () => import('@/views/Home')
     },
     {
-      path: '/note',
-      name: 'Note',
-      component: () => import('@/views/Note')
+      path: '/blogs/:id(\\d+)',
+      name: 'BlogsLookup',
+      component: () => import('@/views/blogs/Lookup')
     },
     {
-      path: '/editor',
-      name: 'Editor',
-      component: () => import('@/components/Editor')
-    },
-    {
-      path: '/previewer',
-      name: 'Previewer',
-      component: () => import('@/components/Previewer')
-    },
-    {
-      path: '/sidebar',
-      name: 'Sidebar',
-      component: () => import('@/components/Sidebar')
+      path: '/blogs/editor',
+      name: 'BlogsEdit',
+      component: () => import('@/views/blogs/Edit')
     }
   ]
 })

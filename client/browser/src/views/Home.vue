@@ -1,13 +1,7 @@
 <template>
   <div class="home">
-    <!--
-    <transition-group tag="div" name="fade" mode="out-in" appear class="blog" v-for="blog in blogs" :key="blog.id">
-      <Previewer :propTitle="blog.title"
-                 :propContent="blog.content"
-                 :propAuthor="blog.author"
-                 :key="blog.id"></Previewer>
-    </transition-group>
-    --->
+    <!--列表的交错过渡特效-->
+    <!--https://cn.vuejs.org/v2/guide/transitions.html#%E5%88%97%E8%A1%A8%E7%9A%84%E4%BA%A4%E9%94%99%E8%BF%87%E6%B8%A1-->
     <transition-group
       v-if="blogs"
       tag="div"
@@ -20,10 +14,12 @@
            v-for="(blog, index) in blogs"
            :key="blog.id"
            :data-index="index">
-        <Previewer
+        <Previewer class="blog-previewer"
           :propTitle="blog.title"
           :propContent="blog.content"
           :propAuthor="blog.author"></Previewer>
+        <button type="button" class="detail-btn" @click="lookupBlog(blog.id)">查看全文</button>
+        <div :key="blog.id" v-if="index !== blogs.length - 1" class="blog-divider"></div>
       </div>
     </transition-group>
   </div>
@@ -39,7 +35,6 @@ export default {
   },
   data () {
     return {
-      show: true,
       blogs: [] // 博客列表：作者，创建时间，观看数，评论数，文章概要
     }
   },
@@ -49,6 +44,10 @@ export default {
       url: this.$store.state.apiURL.blogs_index
     })
     if (res.status === 200) {
+      if (res.data.hasOwnProperty('error')) {
+        console.warn(res.data.error)
+        return
+      }
       this.blogs = res.data
     }
   },
@@ -67,6 +66,14 @@ export default {
           { complete: done }
         )
       }, delay)
+    },
+    lookupBlog (id) {
+      /**
+       * 查看博客全文
+       * @param {Int} id
+       * @returns
+       */
+      this.$router.push({ name: 'BlogsLookup', params: { id } })
     }
   }
 }
@@ -82,8 +89,36 @@ export default {
 
   .blog {
     width: 60%;
-    max-height: 200px;
-    margin: 2rem auto;
+    margin: 0 auto;
+
+    .blog-previewer {
+      max-height: 200px;
+    }
+
+    .detail-btn {
+      margin: 1rem auto;
+      padding: 0.25rem;
+      border: rgba(0, 0, 0, 0.3) solid 1px;
+      border-radius: 0.15rem;
+      background-color: #fbfbfb;
+      outline: none;
+      display: block;
+      font-size: calc(1rem - 4px);
+
+      &:hover {
+        cursor: pointer;
+        background-color: rgba(0, 0, 0, 0.15);
+        transition: background-color 0.3s linear 0s;
+      }
+    }
+
+    .blog-divider {
+      box-sizing: border-box;
+      height: 1px;
+      width: 50%;
+      margin: 1rem auto;
+      border-top: rgba(0, 0, 0, 0.15) solid 1px;
+    }
 
     // 深度作用选择器
     // https://vue-loader.vuejs.org/zh/guide/scoped-css.html#%E6%B7%B1%E5%BA%A6%E4%BD%9C%E7%94%A8%E9%80%89%E6%8B%A9%E5%99%A8

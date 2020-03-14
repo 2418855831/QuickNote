@@ -1,5 +1,5 @@
 <template>
-  <div class="note">
+  <div class="edit">
     <Sidebar v-if="nodes"
              :propNodes="nodes"
              ref="sidebar"
@@ -16,10 +16,10 @@
 </template>
 
 <script>
-import Editor from '../components/Editor'
-import Sidebar from '../components/Sidebar'
+import Editor from '@/components/Editor'
+import Sidebar from '@/components/Sidebar'
 export default {
-  name: 'Note',
+  name: 'Edit',
   components: {
     Editor,
     Sidebar
@@ -95,7 +95,6 @@ export default {
     async getBlog (path) {
       let res = await this.axios({
         method: 'get',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         url: this.$store.state.apiURL.blogs_index,
         params: {
           author: 'a',
@@ -103,6 +102,10 @@ export default {
         }
       })
       if (res.status === 200) {
+        if (res.data.hasOwnProperty('error')) {
+          console.warn(res.data.error)
+          return
+        }
         this.title = res.data.title
         this.content = res.data.content
         this.editorKey = !this.editorKey // 更新编辑器
@@ -129,7 +132,11 @@ export default {
           path: path
         })
       })
-      console.log(res)
+      if (res.status === 200) {
+        if (res.data.hasOwnProperty('error')) {
+          console.warn(res.data.error)
+        }
+      }
     }
   },
   async created () {
@@ -140,13 +147,19 @@ export default {
         author: 'a'
       }
     })
-    this.nodes = res.data
+    if (res.status === 200) {
+      if (res.data.hasOwnProperty('error')) {
+        console.warn(res.data.error)
+        return
+      }
+      this.nodes = res.data
+    }
   }
 }
 </script>
 
 <style lang="less" scoped>
-.note {
+.edit {
   width: 100%;
   height: 100%;
 }
