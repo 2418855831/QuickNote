@@ -32,6 +32,7 @@ def login(request):
     })
 
 
+@require_http_methods(['POST'])
 def logout(request):
     """
     用户注销
