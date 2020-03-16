@@ -4,6 +4,24 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 
 
+@require_http_methods(['GET'])
+def index(request):
+    """
+    获取用户信息
+    :param request:
+    :return: JSON
+    """
+    if request.user.is_authenticated:
+        return JsonResponse({
+            'id': request.user.id,
+            'name': request.user.username
+        })
+    else:
+        return JsonResponse({
+            'error': '未登录'
+        })
+
+
 @require_http_methods(['POST'])
 def login(request):
     """
