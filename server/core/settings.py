@@ -58,6 +58,15 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# Cross-Origin Resource Sharing(CORS)
+# https://github.com/adamchainz/django-cors-headers#configuration
+
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:8080'
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
 ROOT_URLCONF = 'core.urls'
 
 TEMPLATES = [
@@ -134,11 +143,4 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
     '../client/browser/dist/static'
-]
-
-# Cross-Origin Resource Sharing(CORS)
-# https://github.com/adamchainz/django-cors-headers#configuration
-
-CORS_ORIGIN_WHITELIST = [
-    'http://localhost:8080'
 ]
