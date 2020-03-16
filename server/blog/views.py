@@ -74,8 +74,11 @@ def index(request):
             })
 
         response = JsonResponse({
+            'id': blog.id,
+            'author': blog.author,
             'title': blog.title,
-            'content': blog.content
+            'content': blog.content,
+            'createdDate': blog.created_date
         })
     elif id:
         # 查询数据库
@@ -90,7 +93,8 @@ def index(request):
             'id': blog.id,
             'author': blog.author,
             'title': blog.title,
-            'content': blog.content
+            'content': blog.content,
+            'createdDate': blog.created_date
         })
     elif author:
         # 获取该作者的所有博客
@@ -104,7 +108,8 @@ def index(request):
             'id': blog.id,
             'author': blog.author,
             'title': blog.title,
-            'content': blog.content
+            'content': blog.content,
+            'createdDate': blog.created_date
         } for blog in blogs_set]
         response = JsonResponse(blogs, safe=False)
 
@@ -322,6 +327,34 @@ def save(request):
 
     return JsonResponse({
         'msg': '保存博客成功'
+    })
+
+
+@require_http_methods(['PUT'])
+def incre_views_count(request):
+    """
+    递增博客阅览数
+    :param request: id
+    :return:
+    """
+    put = QueryDict(request.body)
+    try:
+        id = put['id']
+    except KeyError as e:
+        return JsonResponse({
+            'error': '缺少键%s'
+        })
+
+    try:
+        blog = BlogModel.objects.get(id=id)
+    except ObjectDoesNotExist:
+        return JsonResponse({
+            'error': '不存在id为%d的博客' % id
+        })
+    blog.views_count += 1
+    blog.save()
+    return JsonResponse({
+        'msg': '阅览量增加成功'
     })
 
 

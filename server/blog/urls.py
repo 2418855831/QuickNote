@@ -9,6 +9,7 @@ urlpatterns = [
     path('create', views.create, name='create'),
     path('rename', views.rename, name='rename'),
     path('save', views.save, name='save'),
+    path('incre-views-count', views.incre_views_count, name='incre_views_count'),
     path('delete', views.delete, name='delete'),
     path('dirs', views.dirs_index, name='dirs_index'),
     path('dirs/create', views.dirs_create, name='dirs_create'),
