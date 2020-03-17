@@ -29,7 +29,8 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     '[::1]',
-    '.qcoolweb.cn'
+    '.qcoolweb.cn',
+    '192.168.1.3'
 ]
 
 
@@ -62,7 +63,9 @@ MIDDLEWARE = [
 # https://github.com/adamchainz/django-cors-headers#configuration
 
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:8080'
+    'http://localhost:8080',
+    'http://192.168.1.3:8080',
+    'http://192.168.1.3:8000'
 ]
 
 CORS_ALLOW_CREDENTIALS = True
