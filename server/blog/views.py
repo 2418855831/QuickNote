@@ -78,7 +78,8 @@ def index(request):
             'author': blog.author,
             'title': blog.title,
             'content': blog.content,
-            'createdDate': blog.created_date
+            'createdDate': blog.created_date,
+            'viewsCount': blog.views_count
         })
     elif id:
         # 查询数据库
@@ -94,7 +95,8 @@ def index(request):
             'author': blog.author,
             'title': blog.title,
             'content': blog.content,
-            'createdDate': blog.created_date
+            'createdDate': blog.created_date,
+            'viewsCount': blog.views_count
         })
     elif author:
         # 获取该作者的所有博客
@@ -109,7 +111,8 @@ def index(request):
             'author': blog.author,
             'title': blog.title,
             'content': blog.content,
-            'createdDate': blog.created_date
+            'createdDate': blog.created_date,
+            'viewsCount': blog.views_count
         } for blog in blogs_set]
         response = JsonResponse(blogs, safe=False)
 
