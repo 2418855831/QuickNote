@@ -1,11 +1,12 @@
 <template>
   <nav class="header">
-      <span class="brand" @click="toHome">
+      <span class="brand" @click="pushTo({ name: 'Home' })">
         <img class="brand-logo" src="/static/images/logo-32.svg" alt="logo">
         <span class="brand-name">QuickNote</span>
       </span>
     <span v-if="user.id">
-      <span>{{ user.name }}</span>
+      <span class="edit" @click="pushTo({ name: 'BlogsEdit' })">写博客</span>
+      <span class="name">{{ user.name }}</span>
       <span class="logout" @click="logout">注销</span>
     </span>
     <span v-else class="login" @click="login">登录</span>
@@ -27,9 +28,15 @@ export default {
     logout () {
       this.$store.dispatch('logout')
     },
-    toHome () {
-      if (this.$route.name !== 'Home') {
-        this.$router.push({ name: 'Home' })
+    pushTo ({ name, path }) {
+      if (name) {
+        if (this.$route.name !== name) {
+          this.$router.push({ name })
+        }
+      } else if (path) {
+        if (this.$route.path !== path) {
+          this.$router.push({ path })
+        }
       }
     }
   }
@@ -39,11 +46,10 @@ export default {
 <style lang="less" scoped>
 .header {
   width: 100%;
-  height: 8vh;
   margin-bottom: 2vh;
   box-shadow: 0 1vh 1vh rgba(0, 0, 0, 0.1);
   text-align: left;
-  padding: 2vh 2vh;
+  padding: 2vh 2vw;
   display: flex;
   justify-content: space-between;
 
@@ -55,7 +61,7 @@ export default {
     .brand-logo {
       display: inline-block;
       vertical-align: middle;
-      width: 4vh;
+      width: 4vw;
       height: 4vh;
     }
 
@@ -65,7 +71,8 @@ export default {
     }
   }
 
-  .login, .logout {
+  .login, .logout, .name, .edit {
+    margin-left: 1vw;
     &:hover {
       color: rgba(0, 0, 0, 0.75);
       cursor: pointer;

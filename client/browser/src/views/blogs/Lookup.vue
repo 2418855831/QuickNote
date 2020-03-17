@@ -4,7 +4,8 @@
                class="blog-lookup"
                :propTitle="title"
                :propContent="content"
-               :propAuthor="author"></Previewer>
+               :propAuthor="author"
+               :propViewsCount="viewsCount"></Previewer>
   </transition>
 </template>
 
@@ -20,7 +21,8 @@ export default {
       id: null,
       author: null,
       title: null,
-      content: null
+      content: null,
+      viewsCount: null
     }
   },
   async created () {
@@ -45,15 +47,16 @@ export default {
       this.author = res.data.author
       this.title = res.data.title
       this.content = res.data.content
+      this.viewsCount = res.data.viewsCount
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-.lookup {
+.blog-lookup {
   height: 100%;
-  width: 100%;
+  width: 75% !important;
 }
 
 .fade-enter {

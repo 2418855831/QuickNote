@@ -1,7 +1,5 @@
 <template>
   <div class="home">
-    <!--列表的交错过渡特效-->
-    <!--https://cn.vuejs.org/v2/guide/transitions.html#%E5%88%97%E8%A1%A8%E7%9A%84%E4%BA%A4%E9%94%99%E8%BF%87%E6%B8%A1-->
     <transition-group
       v-if="blogs"
       tag="div"
@@ -16,8 +14,10 @@
            :data-index="index">
         <Previewer class="blog-previewer"
           :propTitle="blog.title"
-          :propContent="blog.content"
-          :propAuthor="blog.author"></Previewer>
+          :propAuthor="blog.author"
+          :propCreatedDate="blog.createdDate"
+          :propViewsCount="blog.viewsCount"
+          :propDisplayContent="false"></Previewer>
         <button type="button" class="detail-btn" @click="lookupBlog(blog.id)">查看全文</button>
         <div :key="blog.id" v-if="index !== blogs.length - 1" class="blog-divider"></div>
       </div>
@@ -27,7 +27,8 @@
 
 <script>
 import Velocity from 'velocity-animate'
-import Previewer from '../components/Previewer'
+import Previewer from '@/components/Previewer'
+
 export default {
   name: 'Home',
   components: {
@@ -61,19 +62,28 @@ export default {
         Velocity(
           el,
           { opacity: 1 },
-          { duration: '1000' },
+          { duration: '500' },
           { easing: 'easeInSine' },
           { complete: done }
         )
       }, delay)
     },
-    lookupBlog (id) {
+    async lookupBlog (id) {
       /**
        * 查看博客全文
        * @param {Int} id
        * @returns
        */
       this.$router.push({ name: 'BlogsLookup', params: { id } })
+      // 递增阅览量
+      await this.axios({
+        method: 'put',
+        url: this.$store.state.apiURL.blogs_incre_views_count,
+        header: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        data: this.$qs.stringify({
+          id
+        })
+      })
     }
   }
 }
@@ -122,7 +132,7 @@ export default {
 
     // 深度作用选择器
     // https://vue-loader.vuejs.org/zh/guide/scoped-css.html#%E6%B7%B1%E5%BA%A6%E4%BD%9C%E7%94%A8%E9%80%89%E6%8B%A9%E5%99%A8
-    & /deep/ .markdown-body p {
+    & /deep/ .markdown-body .show-content {
       overflow: hidden;
       text-overflow: ellipsis;
       line-height: 2rem;

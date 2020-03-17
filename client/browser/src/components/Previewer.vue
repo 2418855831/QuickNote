@@ -10,11 +10,8 @@
         <span class="calendar-icon"></span>
         <span>发表于: {{ createdDate }}</span>
         <span class="blog-info-divider">|</span>
-        <span class="comment-icon"></span>
-        <span>评论数: {{ commentsCount }}</span>
-        <span class="blog-info-divider">|</span>
         <span class="eye-icon"></span>
-        <span>阅读次数: {{ lookedCount }}</span>
+        <span>阅读次数: {{ viewsCount }}</span>
       </div>
     </div>
     <!--预览器-->
@@ -40,33 +37,29 @@ export default {
   props: {
     propTitle: {
       type: String,
-      default: '随便整的一个标题'
+      default: ''
     },
     propContent: { // 未经解析的 Markdown格式的内容
       type: String,
-      default: '```c\nint main\n{}\n```'
+      default: ''
     },
     propAuthor: {
       type: String,
-      default: 'a'
+      default: 'unknown'
     },
     propCreatedDate: {
       type: String,
       default: function () {
-        let time = new Date()
-        let year = time.getFullYear()
-        let month = time.getMonth()
-        let day = time.getDate()
-        return year.toString() + '-' + (month < 9 ? '0' : '') + (month + 1).toString() + '-' + (day < 10 ? '0' : '').toString() + day.toString()
+        return new Date().toISOString()
       }
     },
-    propCommentsCount: {
+    propViewsCount: {
       type: Number,
       default: 0
     },
-    propLookedCount: {
-      type: Number,
-      default: 0
+    propDisplayContent: {
+      type: Boolean,
+      default: false
     }
   },
   components: {
@@ -75,11 +68,38 @@ export default {
   data () {
     return {
       title: this.propTitle,
-      content: mavonEditor.getMarkdownIt().render(this.propContent),
+      content: this.propContent,
       author: this.propAuthor,
-      createdDate: this.propCreatedDate,
-      commentsCount: this.propCommentsCount,
-      lookedCount: this.propLookedCount
+      createdDate: this.dateFormat(new Date(this.propCreatedDate), 'yyyy-MM-dd hh:mm:ss'),
+      viewsCount: this.propViewsCount
+    }
+  },
+  methods: {
+    dateFormat (date, fmt) {
+      let o = {
+        'M+': date.getMonth() + 1, // 月份
+        'd+': date.getDate(), // 日
+        'h+': date.getHours(), // 小时
+        'm+': date.getMinutes(), // 分
+        's+': date.getSeconds(), // 秒
+        'q+': Math.floor((date.getMonth() + 3) / 3), // 季度
+        'S': date.getMilliseconds() // 毫秒
+      }
+      if (/(y+)/.test(fmt)) {
+        fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
+      }
+      for (let k in o) {
+        if (new RegExp('(' + k + ')').test(fmt)) {
+          fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)))
+        }
+      }
+      return fmt
+    }
+  },
+  created () {
+    if (!this.propDisplayContent) {
+      // 隐藏内容
+      $('.blog-body').css('display', 'none')
     }
   }
 }
@@ -95,8 +115,7 @@ export default {
   background-color: #fbfbfb;
 
   .blog-header {
-    padding: 0.5rem 0;
-    border-bottom: #f3f3f3 1px solid;
+    padding: 1rem 0;
 
     .blog-title {
       margin-bottom: 0.5rem;
@@ -115,6 +134,7 @@ export default {
   }
 
   .blog-body {
+    border-top: #f3f3f3 1px solid;
     .v-note-wrapper {
       border: 0;
       min-height: 0;
