@@ -14,7 +14,7 @@ export default new Vuex.Store({
       id: null,
       name: null
     },
-    baseURL: 'http://localhost:8000/',
+    baseURL: 'http://qcoolweb.cn:8000/',
     apiURL: {
       blogs_index: 'api/blogs',
       blogs_create: 'api/blogs/create',
