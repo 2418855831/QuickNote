@@ -26,11 +26,7 @@ SECRET_KEY = 'jqa)+qrn&7ay-l28_a+7pjvc#sfcvun$$zpb#jrqk7+*4w1_*5'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
-    '[::1]',
-    '.qcoolweb.cn',
-    '192.168.1.3'
+    '*'
 ]
 
 
@@ -62,11 +58,14 @@ MIDDLEWARE = [
 # Cross-Origin Resource Sharing(CORS)
 # https://github.com/adamchainz/django-cors-headers#configuration
 
+CORS_ORIGIN_ALLOW_ALL = True
+'''
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:8080',
     'http://192.168.1.3:8080',
     'http://192.168.1.3:8000'
 ]
+'''
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -145,5 +144,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    '../client/browser/dist/static'
+    os.path.join(BASE_DIR, '../client/browser/dist/static')
 ]
