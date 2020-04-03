@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as user_login, logout as user_logout
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
+from django.middleware.csrf import get_token
 
 
 @require_http_methods(['GET'])
@@ -11,6 +12,8 @@ def index(request):
     :param request:
     :return: JSON
     """
+    get_token(request)
+
     if request.user.is_authenticated:
         return JsonResponse({
             'id': request.user.id,

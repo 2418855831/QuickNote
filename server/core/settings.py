@@ -26,7 +26,8 @@ SECRET_KEY = 'jqa)+qrn&7ay-l28_a+7pjvc#sfcvun$$zpb#jrqk7+*4w1_*5'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '*'
+    'localhost',
+    '127.0.0.1'
 ]
 
 
@@ -62,11 +63,8 @@ CORS_ORIGIN_ALLOW_ALL = True
 '''
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:8080',
-    'http://192.168.1.3:8080',
-    'http://192.168.1.3:8000'
 ]
 '''
-
 CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'core.urls'
@@ -143,6 +141,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+'''
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, '../client/browser/dist/static')
 ]
+'''
