@@ -36,7 +36,9 @@ def index(request):
         return JsonResponse({
             'id': blog.id,
             'title': blog.title,
-            'content': blog.content
+            'content': blog.content,
+            'createdDate': blog.created_date,
+            'viewsCount': blog.views_count
         })
     elif category_name and title:
         try:
@@ -50,7 +52,9 @@ def index(request):
         return JsonResponse({
             'id': blog.id,
             'title': blog.title,
-            'content': blog.content
+            'content': blog.content,
+            'createdDate': blog.created_date,
+            'viewsCount': blog.views_count
         })
     else:
         blogs = Blog.objects.order_by('created_date')[:10]
@@ -59,7 +63,9 @@ def index(request):
             response.append({
                 'id': blog.id,
                 'title': blog.title,
-                'content': blog.content
+                'content': blog.content,
+                'createdDate': blog.created_date,
+                'viewsCount': blog.views_count
             })
         return JsonResponse(response, safe=False)
 
@@ -255,16 +261,16 @@ def categories_index(request):
     :return:
     """
     category_name = request.GET.get('categoryName')
-
     if category_name:
         try:
             category = Category.objects.get(name=category_name)
         except ObjectDoesNotExist:
             return JsonResponse({'error': '不存在名为%s的分类' % category_name})
-        return JsonResponse([blog.title for blog in category.blogs.all()], safe=False)
+        return JsonResponse([{'id': blog.id, 'name': blog.title} for blog in category.blogs.all()], safe=False)
     else:
+        response_data = []
         categories = Category.objects.all()
-        return JsonResponse([category.name for category in categories], safe=False)
+        return JsonResponse([{'name': category.name, 'children': [{'name': blog.title, 'id': blog.id} for blog in category.blogs.all()]} for category in categories], safe=False)
 
 
 @permission_required('blog.add_category')
