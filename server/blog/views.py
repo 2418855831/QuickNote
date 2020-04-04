@@ -1,11 +1,8 @@
-import json
-
-from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 from django.http import JsonResponse, QueryDict
 from django.views.decorators.http import require_http_methods
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import permission_required
 
 from .models import Category, Blog
 
@@ -67,6 +64,7 @@ def index(request):
         return JsonResponse(response, safe=False)
 
 
+@permission_required('blog.change_blog')
 @require_http_methods(['PUT'])
 def rename(request):
     """
@@ -114,6 +112,8 @@ def rename(request):
     return JsonResponse({'msg': '重命名博客成功'})
 
 
+@permission_required('blog.add_blog')
+@permission_required('blog.change_blog')
 @require_http_methods(['POST'])
 def save(request):
     """
@@ -153,6 +153,7 @@ def save(request):
     return JsonResponse({'msg': '保存博客成功'})
 
 
+@permission_required('blog.change_blog')
 @require_http_methods(['POST'])
 def incre_views_count(request):
     """
@@ -198,6 +199,7 @@ def incre_views_count(request):
     return JsonResponse({'msg': '增加博客浏览量成功'})
 
 
+@permission_required('blog.delete_blog')
 @require_http_methods(['DELETE'])
 def delete(request):
     """
@@ -265,6 +267,7 @@ def categories_index(request):
         return JsonResponse([category.name for category in categories], safe=False)
 
 
+@permission_required('blog.add_category')
 @require_http_methods(['POST'])
 def categories_create(request):
     """
@@ -284,6 +287,7 @@ def categories_create(request):
         return JsonResponse({'error': '已存在名为%s的分类' % category_name})
 
 
+@permission_required('blog.change_category')
 @require_http_methods(['PUT'])
 def categories_rename(request):
     """
@@ -309,6 +313,7 @@ def categories_rename(request):
     return JsonResponse({'msg': '重命名分类成功'})
 
 
+@permission_required('blog.delete_category')
 @require_http_methods(['DELETE'])
 def categories_delete(request):
     """
