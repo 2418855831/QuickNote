@@ -28,6 +28,11 @@ let router = new Router({
       name: 'UsersLogin',
       component: () => import('@/views/users/Login'),
       meta: { requiresUnauth: true }
+    },
+    {
+      path: '/aside',
+      name: 'Aside',
+      component: () => import('@/components/Aside')
     }
   ]
 })

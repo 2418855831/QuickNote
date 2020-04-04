@@ -11,7 +11,7 @@
         <span>发表于: {{ createdDate }}</span>
         <span class="blog-info-divider">|</span>
         <span class="eye-icon"></span>
-        <span>阅读次数: {{ viewsCount }}</span>
+        <span>浏览量: {{ viewsCount }}</span>
       </div>
     </div>
     <!--预览器-->
@@ -45,7 +45,7 @@ export default {
     },
     propAuthor: {
       type: String,
-      default: 'unknown'
+      default: ''
     },
     propCreatedDate: {
       type: String,
@@ -115,7 +115,7 @@ export default {
   background-color: #fbfbfb;
 
   .blog-header {
-    padding: 1rem 0;
+    padding: 1rem;
 
     .blog-title {
       margin-bottom: 0.5rem;

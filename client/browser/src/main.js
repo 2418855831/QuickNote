@@ -4,18 +4,14 @@ import Vue from 'vue'
 import App from './App'
 import router from '@/router'
 import store from '@/store'
-import axios from 'axios'
+import axios from '@/plugins/axios'
 import VueAxios from 'vue-axios'
 import qs from 'qs'
 // eslint-disable-next-line
 import $ from 'jquery'
-// import 'bootstrap/dist/js/bootstrap.min.js'
-// import 'bootstrap/dist/css/bootstrap.min.css'
 
 Vue.prototype.$qs = qs
 
-axios.defaults.withCredentials = true
-axios.defaults.baseURL = store.state.baseURL
 Vue.use(VueAxios, axios)
 
 Vue.config.productionTip = false

@@ -1,12 +1,5 @@
 <template>
   <div class="editor">
-    <!--标题栏-->
-    <div class="title-bar">
-      <div class="title-input-container">
-        <input class="title-input" type="text" placeholder="标题" v-model="title" maxlength="20" required>
-        <span class="title-counter">{{ titleCharactersCount }}/20</span>
-      </div>
-    </div>
     <!--编辑器和预览器-->
     <mavon-editor class="mavon-editor"
                   :toolbars="markdownOption"
@@ -84,10 +77,6 @@ export default {
     }
   },
   computed: {
-    titleCharactersCount () {
-      // 标题字数
-      return this.title.length
-    },
     linesCount () {
       // 内容行数
       let match = this.content.match(/\r\n|\n|\r/gm)

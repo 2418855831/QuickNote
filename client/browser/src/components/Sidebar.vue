@@ -107,13 +107,14 @@ export default {
       callback: {
         onClick (event, treeId, treeNode) {
           if (!treeNode.isParent) {
-            _this.$emit('get', treeNode.getPath().map(node => node.name).join('/'))
+            _this.$emit('get', treeNode.getPath().map(node => node.name))
           }
           _this.tree.currentNode = treeNode
         },
-        onRename (event, treeId, treeNode, isCancel) {
+        beforeRename (treeId, treeNode, newName, isCancel) {
           if (!isCancel) {
-            _this.renameNode(treeNode)
+            _this.renameNode(treeNode, newName)
+            return true
           }
         },
         onRemove (event, treeId, treeNode) {
@@ -132,29 +133,24 @@ export default {
        * @returns undefined
        */
       let newNodeName = 'new ' + this.newNumber
-      if (!parentNode) { // 创建根节点
-        let path = newNodeName
-        this.$emit('createNode', path, true)
-        this.tree.addNodes(null, { name: path, children: [] })
-      } else if (isParent) { // 创建父节点
-        let path = parentNode.getPath().map(node => node.name).join('/') + '/' + newNodeName
-        this.$emit('createNode', path, true)
-        this.tree.addNodes(parentNode, { name: newNodeName, children: [] })
-      } else { // 创建叶节点
-        let path = parentNode.getPath().map(node => node.name).join('/') + '/' + newNodeName
-        this.$emit('createNode', path, false)
+      if (!parentNode) { // 创建目录
+        this.$emit('createNode', { categoryName: newNodeName })
+        this.tree.addNodes(null, { name: newNodeName, children: [] })
+      } else { // 创建节点
+        let categoryName = parentNode.getPath()[0].name
+        this.$emit('createNode', { categoryName: categoryName, title: newNodeName })
         this.tree.addNodes(parentNode, { name: newNodeName })
       }
       this.newNumber++
     },
-    renameNode (treeNode) {
+    renameNode (treeNode, newName) {
       /**
        * 重命名节点
        * @param {bool} treeNode 即将被重命名的节点
        * @returns undefined
        */
-      let path = treeNode.getPath().map(node => node.name).join('/')
-      this.$emit('renameNode', path, treeNode.isParent, treeNode.name)
+      let path = treeNode.getPath().map(node => node.name)
+      this.$emit('renameNode', path, treeNode.isParent, newName)
     },
     deleteNode (treeNode) {
       /**
@@ -162,7 +158,7 @@ export default {
        * @param treeNode 即将被删除的节点
        * @returns undefined
        */
-      let path = treeNode.getPath().map(node => node.name).join('/')
+      let path = treeNode.getPath().map(node => node.name)
       this.$emit('deleteNode', path, treeNode.isParent)
     }
   }

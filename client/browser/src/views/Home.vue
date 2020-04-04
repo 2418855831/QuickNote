@@ -1,6 +1,8 @@
 <template>
   <div class="home">
+    <Aside class="aside"></Aside>
     <transition-group
+      class="content"
       v-if="blogs"
       tag="div"
       name="fade"
@@ -14,7 +16,7 @@
            :data-index="index">
         <Previewer class="blog-previewer"
           :propTitle="blog.title"
-          :propAuthor="blog.author"
+          propAuthor="狸吉、"
           :propCreatedDate="blog.createdDate"
           :propViewsCount="blog.viewsCount"
           :propDisplayContent="false"></Previewer>
@@ -28,11 +30,13 @@
 <script>
 import Velocity from 'velocity-animate'
 import Previewer from '@/components/Previewer'
+import Aside from '@/components/Aside'
 
 export default {
   name: 'Home',
   components: {
-    Previewer
+    Previewer,
+    Aside
   },
   data () {
     return {
@@ -96,49 +100,59 @@ export default {
   width: 100%;
   height: 100%;
   text-align: center;
+  display: flex;
+  flex-direction: row;
 
-  .blog {
-    width: 60%;
-    margin: 0 auto;
+  .aside {
+    margin-left: auto;
+    margin-right: 2rem;
+  }
 
-    .blog-previewer {
-      max-height: 200px;
-    }
+  .content {
+    margin-right: auto;
 
-    .detail-btn {
-      margin: 1rem auto;
-      padding: 0.25rem;
-      border: rgba(0, 0, 0, 0.3) solid 1px;
-      border-radius: 0.15rem;
-      background-color: #fbfbfb;
-      outline: none;
-      display: block;
-      font-size: calc(1rem - 4px);
+    .blog {
+      margin: 0 auto;
 
-      &:hover {
-        cursor: pointer;
-        background-color: rgba(0, 0, 0, 0.15);
-        transition: background-color 0.3s linear 0s;
+      .blog-previewer {
+        max-height: 200px;
       }
-    }
 
-    .blog-divider {
-      box-sizing: border-box;
-      height: 1px;
-      width: 50%;
-      margin: 1rem auto;
-      border-top: rgba(0, 0, 0, 0.15) solid 1px;
-    }
+      .detail-btn {
+        margin: 1rem auto;
+        padding: 0.25rem;
+        border: rgba(0, 0, 0, 0.3) solid 1px;
+        border-radius: 0.15rem;
+        background-color: #fbfbfb;
+        outline: none;
+        display: block;
+        font-size: calc(1rem - 4px);
 
-    // 深度作用选择器
-    // https://vue-loader.vuejs.org/zh/guide/scoped-css.html#%E6%B7%B1%E5%BA%A6%E4%BD%9C%E7%94%A8%E9%80%89%E6%8B%A9%E5%99%A8
-    & /deep/ .markdown-body .show-content {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      line-height: 2rem;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
+        &:hover {
+          cursor: pointer;
+          background-color: rgba(0, 0, 0, 0.15);
+          transition: background-color 0.3s linear 0s;
+        }
+      }
+
+      .blog-divider {
+        box-sizing: border-box;
+        height: 1px;
+        width: 50%;
+        margin: 1rem auto;
+        border-top: rgba(0, 0, 0, 0.15) solid 1px;
+      }
+
+      // 深度作用选择器
+      // https://vue-loader.vuejs.org/zh/guide/scoped-css.html#%E6%B7%B1%E5%BA%A6%E4%BD%9C%E7%94%A8%E9%80%89%E6%8B%A9%E5%99%A8
+      & /deep/ .markdown-body .show-content {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 2rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+      }
     }
   }
 }
