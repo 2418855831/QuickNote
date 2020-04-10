@@ -266,7 +266,13 @@ def categories_index(request):
             category = Category.objects.get(name=category_name)
         except ObjectDoesNotExist:
             return JsonResponse({'error': '不存在名为%s的分类' % category_name})
-        return JsonResponse([{'id': blog.id, 'name': blog.title} for blog in category.blogs.all()], safe=False)
+        return JsonResponse([{
+            'id': blog.id,
+            'title': blog.title,
+            'content': blog.content,
+            'createdDate': blog.created_date,
+            'viewsCount': blog.views_count
+        } for blog in category.blogs.all()], safe=False)
     else:
         response_data = []
         categories = Category.objects.all()
