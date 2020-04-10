@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "axios": "^0.19.2",
+    "babel-polyfill": "^6.26.0",
     "bootstrap": "^4.4.1",
     "highlight.js": "^9.18.1",
     "jquery": "^3.4.1",

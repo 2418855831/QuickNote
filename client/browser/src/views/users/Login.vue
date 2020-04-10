@@ -53,8 +53,8 @@ export default {
 @import '../../assets/variables/common.less';
 .login {
   position: absolute;
-  right: 0;
   left: 0;
+  right: 0;
 
   .logo {
     margin: 4vh 0;
@@ -97,6 +97,7 @@ export default {
       margin-right: auto;
       width: 60%;
       padding: 0.25rem;
+      background: none;
       outline: none;
       border: rgba(0, 0, 0, 0.1) solid 1px;
       border-radius: 0.25rem;
