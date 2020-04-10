@@ -1,6 +1,5 @@
 <template>
-  <div class="home">
-    <Aside class="aside"></Aside>
+  <div class="category">
     <transition-group
       class="content"
       v-if="blogs"
@@ -15,11 +14,11 @@
            :key="blog.id"
            :data-index="index">
         <Previewer class="blog-previewer"
-          :propTitle="blog.title"
-          propAuthor="狸吉、"
-          :propCreatedDate="blog.createdDate"
-          :propViewsCount="blog.viewsCount"
-          :propDisplayContent="false"></Previewer>
+                   :propTitle="blog.title"
+                   propAuthor="狸吉、"
+                   :propCreatedDate="blog.createdDate"
+                   :propViewsCount="blog.viewsCount"
+                   :propDisplayContent="false"></Previewer>
         <button type="button" class="detail-btn" @click="lookupBlog(blog.id)">查看全文</button>
         <div :key="blog.id" v-if="index !== blogs.length - 1" class="blog-divider"></div>
       </div>
@@ -30,23 +29,25 @@
 <script>
 import Velocity from 'velocity-animate'
 import Previewer from '@/components/Previewer'
-import Aside from '@/components/Aside'
 
 export default {
-  name: 'Home',
-  components: {
-    Previewer,
-    Aside
-  },
+  name: 'Category',
   data () {
     return {
-      blogs: [] // 博客列表：作者，创建时间，观看数
+      categoryName: this.$route.params.name,
+      blogs: []
     }
+  },
+  components: {
+    Previewer
   },
   async created () {
     let res = await this.axios({
       method: 'get',
-      url: this.$store.state.apiURL.blogs_index
+      url: this.$store.state.apiURL.categories_index,
+      params: {
+        categoryName: this.categoryName
+      }
     })
     if (res.status === 200) {
       if (res.data.hasOwnProperty('error')) {
@@ -94,23 +95,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import '../assets/variables/common.less';
-
-.home {
-  width: 100%;
-  height: 100%;
-  text-align: center;
+.category {
   display: flex;
-  flex-direction: row;
-
-  .aside {
-    margin-left: auto;
-    margin-right: 2rem;
-  }
+  justify-content: center;
 
   .content {
-    margin-right: auto;
-
     .blog {
       margin: 0 auto;
 

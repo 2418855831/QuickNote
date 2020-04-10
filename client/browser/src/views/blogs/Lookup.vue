@@ -4,7 +4,7 @@
                class="blog-lookup"
                :propTitle="title"
                :propContent="content"
-               :propAuthor="author"
+               propAuthor="狸吉、"
                :propViewsCount="viewsCount"></Previewer>
   </transition>
 </template>

@@ -9,7 +9,7 @@
         <li class="nav-index" @click="pushTo({ name: 'Home' })">
           <i class="nav-icon home-icon"></i>首页
         </li>
-        <li class="nav-index" @click="pushTo({ name: 'Home' })">
+        <li class="nav-index" @click="pushTo({ name: 'Categories' })">
           <i class="nav-icon category-icon"></i>分类
         </li>
         <li class="nav-index" @click="pushTo({ name: 'Home' })">

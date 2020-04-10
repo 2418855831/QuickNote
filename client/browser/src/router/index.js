@@ -12,6 +12,7 @@ let router = new Router({
       name: 'Home',
       component: () => import('@/views/Home')
     },
+    // blogs
     {
       path: '/blogs/:id(\\d+)',
       name: 'BlogsLookup',
@@ -23,12 +24,25 @@ let router = new Router({
       component: () => import('@/views/blogs/Edit'),
       meta: { requiresAuth: true }
     },
+    // categories
+    {
+      path: '/categories',
+      name: 'Categories',
+      component: () => import('@/views/Categories/Categories')
+    },
+    {
+      path: '/categories/:name(.+)',
+      name: 'Category',
+      component: () => import('@/views/Categories/Category')
+    },
+    // users
     {
       path: '/users/login',
       name: 'UsersLogin',
       component: () => import('@/views/users/Login'),
       meta: { requiresUnauth: true }
     },
+    // test
     {
       path: '/aside',
       name: 'Aside',
