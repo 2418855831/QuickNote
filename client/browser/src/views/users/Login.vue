@@ -7,10 +7,14 @@
       登录到Quick Note
     </div>
     <div class="form">
-      <label for="username">账号</label>
-      <input type="text" id="username" placeholder="账号">
-      <label for="password">密码</label>
-      <input type="password" id="password" placeholder="密码">
+      <div class="username-container">
+        <i class="author-icon"></i>
+        <input type="text" id="username" placeholder="账号">
+      </div>
+      <div class="password-container">
+        <i class="lock-icon"></i>
+        <input type="password" id="password" placeholder="密码">
+      </div>
       <input type="submit" value="登录" @click.prevent="login">
     </div>
   </div>
@@ -46,6 +50,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@import '../../assets/variables/common.less';
 .login {
   position: absolute;
   right: 0;
@@ -69,17 +74,42 @@ export default {
     border: rgba(0, 0, 0, 0.1) solid 1px;
     border-radius: 0.25rem;
 
-    label {
-      margin-bottom: 0.5rem;
-      display: block;
-      text-align: left;
-      font-weight: 600;
-      font-size: 14px;
+    .username-container, .password-container {
+      margin: 0.3rem 0 1rem;
+      width: 100%;
+      display: flex;
+    }
+
+    .username-container:focus-within {
+      .author-icon:before {
+        color: @dark;
+      }
+    }
+
+    .password-container:focus-within {
+      .lock-icon:before {
+        color: @dark;
+      }
+    }
+
+    input[type="text"], input[type="password"] {
+      margin-left: auto;
+      margin-right: auto;
+      width: 60%;
+      padding: 0.25rem;
+      outline: none;
+      border: rgba(0, 0, 0, 0.1) solid 1px;
+      border-radius: 0.25rem;
+      transition: 0.3s;
+
+      &:focus {
+        width: 80%;
+      }
     }
 
     input[type="submit"] {
-      width: 100%;
-      margin-top: 1rem;
+      width: 30%;
+      margin-top: 0.3rem;
       padding: 0.25rem;
       background-color: #fbfbfb;
       outline: none;
@@ -93,15 +123,6 @@ export default {
       }
     }
 
-    input[type="text"], input[type="password"] {
-      margin-top: 0.3rem;
-      margin-bottom: 1rem;
-      width: 100%;
-      padding: 0.25rem;
-      outline: none;
-      border: rgba(0, 0, 0, 0.1) solid 1px;
-      border-radius: 0.25rem;
-    }
   }
 }
 </style>
