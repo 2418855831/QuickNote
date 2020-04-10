@@ -42,11 +42,11 @@ let router = new Router({
       component: () => import('@/views/users/Login'),
       meta: { requiresUnauth: true }
     },
-    // test
+    // 404 Not Found
     {
-      path: '/aside',
-      name: 'Aside',
-      component: () => import('@/components/Aside')
+      path: '*',
+      name: 'NotFound',
+      component: () => import('@/components/NotFound')
     }
   ]
 })
