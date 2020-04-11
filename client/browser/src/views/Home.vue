@@ -1,10 +1,9 @@
 <template>
   <div class="home">
-    <Aside class="aside"></Aside>
     <transition-group
       class="content"
       v-if="blogs"
-      tag="div"
+      tag="main"
       name="fade"
       :css="false"
       @before-enter="beforeEnter"
@@ -30,13 +29,11 @@
 <script>
 import Velocity from 'velocity-animate'
 import Previewer from '@/components/Previewer'
-import Aside from '@/components/Aside'
 
 export default {
   name: 'Home',
   components: {
-    Previewer,
-    Aside
+    Previewer
   },
   data () {
     return {
@@ -99,18 +96,8 @@ export default {
 .home {
   width: 100%;
   height: 100%;
-  text-align: center;
-  display: flex;
-  flex-direction: row;
-
-  .aside {
-    margin-left: auto;
-    margin-right: 2rem;
-  }
 
   .content {
-    margin-right: auto;
-
     .blog {
       margin: 0 auto;
 

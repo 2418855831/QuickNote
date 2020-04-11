@@ -1,4 +1,4 @@
-// colors
+/* 颜色表 */
 @red: #e93838;
 @dark: #0f2e47;
 @dark-less: rgb(55,62,67);
@@ -14,24 +14,27 @@
 @white: rgb(255, 255, 255);
 @white-less: rgb(242,245,247);
 @black: rgb(0, 0, 0);
+@black-less: rgb(20, 20, 24);
 
 // indices
 @base-index: 1500;
 
-// size
+/* 尺寸 */
 @sidebar-width: 16vw;
 @sidebar-header-height: 12vh;
 @icon-size: 14px;
 @icon-size-less: 12px;
+@screen-threshold-size: 600px;
+@navbar-width-big: 4rem;
+@navbar-height-small: 3rem;
 
-// fonts
+/* 字体 */
 @font-face {
   font-family: "octicons";
   src: url("/static/fonts/octicons.woff") format("woff"),
        url("/static/fonts/octicons.woff2") format("woff2");
 }
 
-// icon names
 // Octicons: https://octicons.github.com/
 // Octicons codes: https://github.com/atom/atom/blob/master/static/variables/octicon-utf-codes.less
 @icons-pin: '\f041';
@@ -54,8 +57,8 @@
 @icons-lock: "\f06a";
 @icons-tag: "\f015";
 @icons-bookmark: "\f07b";
+@icons-light-bulb: "\f000";
 
-// icon creator
 .icon-creator(@code; @font-family: octicons; @color: @gray; @hover-color: @error; @font-size: 14px; @width: 16px; @top: 0) {
   position: relative;
 

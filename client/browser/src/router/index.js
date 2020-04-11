@@ -42,6 +42,12 @@ let router = new Router({
       component: () => import('@/views/users/Login'),
       meta: { requiresUnauth: true }
     },
+    // test
+    {
+      path: '/Navbar',
+      name: 'Navbar',
+      component: () => import('@/components/Navbar')
+    },
     // 404 Not Found
     {
       path: '*',

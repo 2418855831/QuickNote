@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <Header></Header>
+    <!--<Header></Header>-->
+    <Navbar class="navbar"></Navbar>
     <transition :name="slide" mode="out-in">
       <router-view></router-view>
     </transition>
@@ -9,11 +10,13 @@
 
 <script>
 import Header from '@/components/Header'
+import Navbar from '@/components/Navbar'
 
 export default {
   name: 'App',
   components: {
-    Header
+    Header,
+    Navbar
   },
   data () {
     return {
@@ -36,6 +39,7 @@ export default {
 
 <style lang="less">
 @import "./assets/variables/ztree-icons.less";
+@import "./assets/variables/common.less";
 
 * {
   margin: 0;
@@ -45,7 +49,6 @@ export default {
 
 html, body {
   width: 100%;
-  height: 100%;
   font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;
   font-size: 16px;
   line-height: 1.5;
@@ -58,6 +61,16 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+
+  /* 大屏(电脑，平板) */
+  @media only screen and (min-width: @screen-threshold-size) {
+    margin-left: @navbar-width-big;
+  }
+
+  /* 小屏(手机) */
+  @media only screen and (max-width: @screen-threshold-size) {
+    margin-bottom: @navbar-height-small;
+  }
 }
 
 /*slide left*/
