@@ -12,6 +12,11 @@ let router = new Router({
       name: 'Home',
       component: () => import('@/views/Home')
     },
+    {
+      path: '/resume',
+      name: 'Resume',
+      component: () => import('@/components/Resume')
+    },
     // blogs
     {
       path: '/blogs/:id(\\d+)',
@@ -28,12 +33,12 @@ let router = new Router({
     {
       path: '/categories',
       name: 'Categories',
-      component: () => import('@/views/Categories/Categories')
+      component: () => import('@/views/categories/Categories')
     },
     {
       path: '/categories/:name(.+)',
       name: 'Category',
-      component: () => import('@/views/Categories/Category')
+      component: () => import('@/views/categories/Category')
     },
     // users
     {

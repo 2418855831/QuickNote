@@ -13,7 +13,7 @@
         <i class="nav-icon category-icon"></i>
         <span class="nav-text">分类</span>
       </li>
-      <li class="nav-item" @click="pushTo({ name: 'Home' })">
+      <li class="nav-item" @click="pushTo({ name: 'Resume' })">
         <i class="nav-icon aboutme-icon"></i>
         <span class="nav-text">关于</span>
       </li>
