@@ -28,8 +28,8 @@ export default {
       /**
        * 用户登录
        */
-      let username = $('#username').val()
-      let password = $('#password').val()
+      let username = document.getElementById('username').value
+      let password = document.getElementById('password').value
 
       if (username && password) {
         this.$store.dispatch('login', {
@@ -37,9 +37,12 @@ export default {
           password
         })
         if (this.$route.params.wantedRoute) {
-          this.$router.replace({ path: this.$route.params.wantedRoute })
+          // BUG: 此处跳转总是失败，应该是官方的BUG，暂时就总是让它跳转到主页吧
+          this.$router.replace({ name: this.$route.params.wantedRoute }, () => {}, () => {
+            this.$router.replace({ name: 'Home' })
+          })
         } else {
-          this.$router.replace({ name: 'home' })
+          this.$router.replace({ name: 'Home' })
         }
       } else {
         alert('用户名和密码不能为空')

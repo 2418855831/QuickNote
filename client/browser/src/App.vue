@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <!--<Header></Header>-->
-    <Navbar class="navbar"></Navbar>
+    <Navbar class="navbar" v-show="$route.name != 'BlogsEdit'"></Navbar>
     <transition :name="slide" mode="out-in">
       <router-view></router-view>
     </transition>

@@ -31,24 +31,49 @@ export default {
     }
   },
   mounted () {
+    // eslint-disable-next-line
+    let isHere = true
+    let isFixed = false
     // 创建侧边栏事件处理函数
     function sidebarExpand () {
       // expand sidebar
+      $('.sidebar').off('mouseleave', sidebarCollapse)
+      setTimeout(() => {
+        if (!isFixed) {
+          $('.sidebar').on('mouseleave', sidebarCollapse)
+        }
+      }, 1500)
+      setTimeout(() => {
+        if (!isHere && !isFixed) {
+          sidebarCollapse()
+        }
+        $('body').off('mousemove', sidebarCollapseEx)
+      }, 1500)
       $('.sidebar').addClass('sidebar-show')
+      $('body').on('mousemove', sidebarCollapseEx)
     }
     function sidebarCollapse () {
       // collapse sidebar
       $('.sidebar').removeClass('sidebar-show')
     }
+    function sidebarCollapseEx (e) {
+      if (!($.contains($('.sidebar')[0], e.target) || $('.sidebar')[0] === e.target)) {
+        isHere = false
+      } else {
+        isHere = true
+      }
+    }
     function sidebarFix () {
       // fix or unfix sidebar
       if ($('.sidebar-pinned').length) {
         // unfix sidebar
+        isFixed = false
         $('.sidebar-pin').removeClass('sidebar-pinned')
         $('#app').css('padding-left', '0vw')
         $('.sidebar').on('mouseleave', sidebarCollapse)
       } else {
         // fix sidebar
+        isFixed = true
         $('.sidebar-pin').addClass('sidebar-pinned')
         $('#app').css('padding-left', '16vw')
         $('.sidebar').off('mouseleave', sidebarCollapse)
@@ -56,7 +81,7 @@ export default {
     }
 
     $('.sidebar-toggle').on('mouseenter', sidebarExpand)
-    $('.sidebar').on('mouseleave', sidebarCollapse)
+    // $('.sidebar').on('mouseleave', sidebarCollapse)
     $('.sidebar-pin').on('click', sidebarFix)
 
     // 初始化 zTree
@@ -172,9 +197,7 @@ export default {
   top: 0 !important;
   left: 0 !important;
   right: 0 !important;
-  bottom: 0 !important;
   width: @sidebar-width;
-  height: 100vh;
   padding-top: @sidebar-header-height;
   overflow: visible;
   box-sizing: border-box;
@@ -195,7 +218,7 @@ export default {
     line-height: 1rem;
     border-radius: 0 0.3rem 0.3rem 0;
     opacity: 1;
-    transition: right 0.25s ease-in 0.2s, opacity 0.35s ease-in 0.2s;
+    transition: right 0.2s ease-in 0.3s, opacity 0.2s ease-in 0.3s;
   }
 
   .sidebar-header {
@@ -231,7 +254,7 @@ export default {
     height: 100%;
     background-color: @white-less;
     overflow-y: auto;
-    overflow-x: scroll;
+    overflow-x: auto;
   }
 
   &.sidebar-show {
@@ -242,7 +265,7 @@ export default {
       right: 1.5rem;
       opacity: 0;
       pointer-events: none;
-      transition: right 0.2s ease 0s, opacity 0s ease 0s;
+      transition: right 0s ease 0s, opacity 0s ease 0s;
     }
   }
 }

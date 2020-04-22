@@ -1,6 +1,7 @@
 <template>
   <div class="edit">
-    <Sidebar v-if="nodes"
+    <Sidebar class="sidebar"
+             v-if="nodes"
              :propNodes="nodes"
              ref="sidebar"
              @get="getBlog"
@@ -191,6 +192,8 @@ export default {
     }
   },
   async created () {
+    document.getElementById('app').style.marginLeft = '0'
+
     let res = await this.axios({
       method: 'get',
       url: this.$store.state.apiURL.categories_index
@@ -209,8 +212,13 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@import "../../assets/variables/common.less";
 .edit {
   width: 100%;
-  height: 100%;
+  height: 100vh;
+
+  .sidebar {
+    height: calc(100vh - @statusbar-height);
+  }
 }
 </style>

@@ -125,7 +125,7 @@ export default {
 
   .mavon-editor {
     width: 100%;
-    min-height: calc(100% - 2.5rem);
+    height: calc(100% - @statusbar-height);
   }
 
   .status-bar {
@@ -133,7 +133,7 @@ export default {
     bottom: 0;
     right: 0;
     width: 100vw;
-    height: 1.25rem;
+    height: @statusbar-height;
     z-index: 1500;
     color: white;
     background-color: @blue;

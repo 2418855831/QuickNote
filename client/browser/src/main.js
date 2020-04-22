@@ -8,7 +8,7 @@ import axios from '@/plugins/axios'
 import VueAxios from 'vue-axios'
 import qs from 'qs'
 // eslint-disable-next-line
-import $ from 'jquery'
+// import $ from 'jquery'
 
 Vue.prototype.$qs = qs
 

@@ -22,7 +22,8 @@
                     :shortCut="false"
                     :autofocus="false"
                     :boxShadow="false"
-                    v-model="content">
+                    v-model="content"
+                    v-show="propDisplayContent">
       </mavon-editor>
     </div>
   </div>
