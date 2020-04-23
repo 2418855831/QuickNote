@@ -96,12 +96,6 @@ export default {
       }
       return fmt
     }
-  },
-  created () {
-    if (!this.propDisplayContent) {
-      // 隐藏内容
-      $('.blog-body').css('display', 'none')
-    }
   }
 }
 </script>

@@ -163,7 +163,7 @@ export default {
   }
 
   /* 大屏(电脑，平板) */
-  @media only screen and (min-width: @screen-threshold-size) {
+  @media only screen and (min-width: @screen-threshold-size), only screen and (width: @screen-threshold-size) {
     top: 0;
     left: 0;
     width: @navbar-width-big;
@@ -202,7 +202,7 @@ export default {
   }
 
   /* 小屏(手机) */
-  @media only screen and (max-width: @screen-threshold-size) {
+  @media only screen and (max-width: @screen-threshold-size - 1) {
     bottom: 0;
     width: 100vw;
     height: @navbar-height-small;

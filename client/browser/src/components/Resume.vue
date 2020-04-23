@@ -188,8 +188,6 @@ export default {
 @import '../assets/variables/common.less';
 .resume {
   padding: 2rem;
-  display: flex;
-  flex-direction: row;
 
   .head {
     width: 100%;
@@ -201,6 +199,7 @@ export default {
     letter-spacing: 0.2rem;
     font-size: 1.5rem;
     font-weight: 900;
+    white-space: nowrap;
 
     &::before, &::after {
       margin: 0.3rem;
@@ -245,24 +244,25 @@ export default {
 
   .left-pannel {
     padding: 2rem;
-    width: 35%;
-    border-right: 2px solid @gray;
 
     .photo {
       margin: 0 auto;
       padding: 1rem;
-      width: 200px;
+      width: 100%;
+      max-width: 200px;
       height: 200px;
-      background-size: cover;
       background-image: url("/static/images/photo.png");
       background-repeat: no-repeat;
       background-clip: content-box;
+      background-position: center;
+      background-size: contain;
       border-radius: 100px;
       border: 2px dashed @gray;
     }
 
     .personal-resume {
       margin-top: 4rem;
+      white-space: nowrap;
 
       .title {
         margin: 1rem auto 0;
@@ -299,7 +299,6 @@ export default {
 
   .right-pannel {
     padding: 2rem;
-    width: 65%;
 
     .project-experience {
       .logo {
@@ -318,6 +317,39 @@ export default {
         background-image: url("/static/images/self-evaluation.png");
       }
     }
+  }
+}
+
+/* 大屏(电脑，平板) */
+@media only screen and (min-width: 700px) {
+  .resume {
+    display: flex;
+    flex-direction: row;
+
+    .left-pannel {
+      width: 35%;
+      border-right: 2px solid @gray;
+    }
+
+    .right-pannel {
+      width: 65%;
+    }
+  }
+}
+
+/* 小屏(手机) */
+@media only screen and (max-width: 700px) {
+  .resume {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .left-pannel {
+    width: 100%;
+  }
+
+  .right-pannel {
+    width: 100%;
   }
 }
 </style>
