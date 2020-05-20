@@ -2,6 +2,7 @@
   <transition name="fade" class="lookup" appear>
     <Previewer v-if="id"
                class="blog-lookup"
+               :propDisplayContent="true"
                :propTitle="title"
                :propContent="content"
                propAuthor="狸吉、"

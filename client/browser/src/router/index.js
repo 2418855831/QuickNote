@@ -7,6 +7,12 @@ Vue.use(Router)
 let router = new Router({
   mode: 'history',
   routes: [
+    // test
+    {
+      path: '/scroll-to-top',
+      name: 'ScrollToTop',
+      component: () => import('@/components/ScrollToTop')
+    },
     {
       path: '',
       name: 'Home',

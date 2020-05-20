@@ -3,7 +3,7 @@
     <transition-group
       class="content"
       v-if="blogs"
-      tag="main"
+      tag="div"
       name="fade"
       :css="false"
       @before-enter="beforeEnter"
@@ -14,11 +14,11 @@
            :key="blog.id"
            :data-index="index">
         <Previewer class="blog-previewer"
-          :propTitle="blog.title"
-          propAuthor="狸吉、"
-          :propCreatedDate="blog.createdDate"
-          :propViewsCount="blog.viewsCount"
-          :propDisplayContent="false"></Previewer>
+                   :propTitle="blog.title"
+                   propAuthor="狸吉、"
+                   :propCreatedDate="blog.createdDate"
+                   :propViewsCount="blog.viewsCount"
+                   :propDisplayContent="false"></Previewer>
         <button type="button" class="detail-btn" @click="lookupBlog(blog.id)">查看全文</button>
         <div :key="blog.id" v-if="index !== blogs.length - 1" class="blog-divider"></div>
       </div>
@@ -94,8 +94,8 @@ export default {
 @import '../assets/variables/common.less';
 
 .home {
-  width: 100%;
-  height: 100%;
+  display: flex;
+  justify-content: center;
 
   .content {
     .blog {

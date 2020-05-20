@@ -2,6 +2,7 @@
   <div id="app">
     <!--<Header></Header>-->
     <Navbar class="navbar" v-show="$route.name != 'BlogsEdit'"></Navbar>
+    <ScrollToTop class="scroll-to-top"></ScrollToTop>
     <transition :name="slide" mode="out-in">
       <router-view></router-view>
     </transition>
@@ -11,12 +12,14 @@
 <script>
 import Header from '@/components/Header'
 import Navbar from '@/components/Navbar'
+import ScrollToTop from '@/components/ScrollToTop'
 
 export default {
   name: 'App',
   components: {
     Header,
-    Navbar
+    Navbar,
+    ScrollToTop
   },
   data () {
     return {
@@ -70,6 +73,9 @@ html, body {
   /* 小屏(手机) */
   @media only screen and (max-width: @screen-threshold-size) {
     margin-bottom: @navbar-height-small;
+    .scroll-to-top {
+      display: none;
+    }
   }
 }
 
