@@ -159,7 +159,6 @@ def save(request):
     return JsonResponse({'msg': '保存博客成功'})
 
 
-@permission_required('blog.change_blog')
 @require_http_methods(['POST'])
 def incre_views_count(request):
     """
