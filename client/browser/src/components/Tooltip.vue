@@ -37,7 +37,7 @@ export default {
   text-align: center;
   white-space: pre;
 
-  // 三角形
+  // triangle
   &:after {
     content: "";
     display: block;
