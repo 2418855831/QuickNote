@@ -60,27 +60,4 @@
 @icons-tag: "\f015";
 @icons-bookmark: "\f07b";
 @icons-light-bulb: "\f000";
-
-.icon-creator(@code; @font-family: octicons; @color: @gray; @hover-color: @error; @font-size: 14px; @width: 16px; @top: 0) {
-  position: relative;
-
-  &:before {
-    content: @code;
-    font-family: @font-family;
-    color: @color;
-    font-size: @font-size;
-    font-weight: normal;
-    font-style: normal;
-    text-align: center;
-    width: @width;
-    line-height: 1;
-    position: relative;
-    top: @top;
-    display: inline-block;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  &:hover:before {
-    color: @hover-color;
-  }
-}
+@icons-palette: "\f0dd";

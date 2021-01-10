@@ -14,4 +14,5 @@ urlpatterns = [
     path('categories/create', views.categories_create, name='categories_create'),
     path('categories/rename', views.categories_rename, name='categories_rename'),
     path('categories/delete', views.categories_delete, name='categories_delete'),
+    path('palette', views.palette, name='palette'),
 ]

@@ -17,6 +17,10 @@
         <i class="nav-icon aboutme-icon"></i>
         <span class="nav-text">关于</span>
       </li>
+      <li class="nav-item" @click="pushTo({ name: 'Palette' })">
+        <i class="nav-icon palette-icon"></i>
+        <span class="nav-text">色板</span>
+      </li>
       <li class="nav-item" @click="toggleTheme">
         <i class="nav-icon light-bulb-icon"></i>
         <span class="nav-text">主题</span>
@@ -85,6 +89,7 @@ export default {
   z-index: @base-index + 1;
   background-color: var(--bg-primary);
   transition: var(--transition-speed);
+  user-select: none;
 
   .nav-list {
     margin: 0;

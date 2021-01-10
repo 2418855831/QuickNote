@@ -22,6 +22,7 @@ export default new Vuex.Store({
       blogs_incre_views_count: 'api/blogs/incre-views-count',
       blogs_rename: 'api/blogs/rename',
       blogs_delete: 'api/blogs/delete',
+      palette: 'api/blogs/palette',
       categories_index: 'api/blogs/categories',
       categories_create: 'api/blogs/categories/create',
       categories_rename: 'api/blogs/categories/rename',

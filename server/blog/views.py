@@ -5,6 +5,7 @@ from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import permission_required
 
 from .models import Category, Blog
+import json
 
 
 @require_http_methods(['GET'])
@@ -118,7 +119,6 @@ def rename(request):
     return JsonResponse({'msg': '重命名博客成功'})
 
 
-@permission_required('blog.add_blog')
 @permission_required('blog.change_blog')
 @require_http_methods(['POST'])
 def save(request):
@@ -346,3 +346,16 @@ def categories_delete(request):
     category.delete()
 
     return JsonResponse({'msg': '删除分类成功'})
+
+
+@require_http_methods(['GET'])
+def palette(request):
+    """
+    返回调色板json
+    :param request:
+    :return:
+    """
+    f = open('../client/browser/static/colors.json', 'r', encoding='utf-8')
+    j = json.load(f)
+    f.close()
+    return JsonResponse(j)

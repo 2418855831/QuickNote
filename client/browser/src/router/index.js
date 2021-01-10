@@ -9,9 +9,9 @@ let router = new Router({
   routes: [
     // test
     {
-      path: '/scroll-to-top',
-      name: 'ScrollToTop',
-      component: () => import('@/components/ScrollToTop')
+      path: '/tooltip',
+      name: 'Tooltip',
+      component: () => import('@/components/Tooltip')
     },
     {
       path: '',
@@ -22,6 +22,11 @@ let router = new Router({
       path: '/resume',
       name: 'Resume',
       component: () => import('@/components/Resume')
+    },
+    {
+      path: '/palette',
+      name: 'Palette',
+      component: () => import('@/components/Palette')
     },
     // blogs
     {
