@@ -1,12 +1,12 @@
 <template>
   <div class='palette'>
-    <div v-for="(color, index) in colors" v-bind:key="index">
-      <div class="palette-card"
-        @click="copyColor(index)"
-        :style="{background: color.hex}">{{ color.name }}
-        <Tooltip class="tooltip"
+    <div v-for="(color, index) in colors"
+      v-bind:key="index"
+      class="palette-card"
+      @click="copyColor(index)"
+      :style="{background: color.hex}">{{ color.name }}
+      <Tooltip class="tooltip"
           :msg="color.name + '\nrgb(' + color.rgb + ')\n' + color.hex" />
-      </div>
     </div>
   </div>
 </template>
@@ -53,7 +53,7 @@ export default {
 
 <style lang="less" scoped>
 @import '../assets/variables/common.less';
-
+/*
 .palette {
   display: flex;
   flex-direction: row;
@@ -68,6 +68,34 @@ export default {
     color: #fff;
     font-family: '仿宋';
     font-size: 5rem;
+    user-select: none;
+    position: relative;
+
+    &:hover {
+      cursor: pointer;
+
+      .tooltip {
+        display: block;
+      }
+    }
+  }
+}
+*/
+
+.palette {
+  display: grid;
+  padding: 0 3%;
+  grid-template-columns: repeat(4, 1fr);
+  justify-items: center;
+  align-items: center;
+  justify-content: space-between;
+
+  .palette-card {
+    margin: 1rem auto;
+    color: #fff;
+    min-width: 16rem;
+    font-family: '仿宋';
+    font-size: 4rem;
     user-select: none;
     position: relative;
 
