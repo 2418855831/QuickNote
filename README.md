@@ -39,7 +39,7 @@
 | POST   | /api/users/login             | username, password                   |                                            | 登录(仅限管理员)                           |
 | POST   | /api/users/logout            |                                      |                                            | 注销(仅限管理员)                           |
 | GET    | /api/blogs                   | ([categoryName, title] \| id)        | {id,title,content, createdDate,viewsCount} | 获取指定的博客或随机一些博客               |
-|        |                              |                                      |                                            |                                            |
+| GET    | /api/blogs/palette           |                                      | {colors{name, hex}}                        | 获取调色板色彩                             |
 | PUT    | /api/blogs/rename            | [categoryName, title]\| id, newTitle |                                            | 重命名博客(仅限管理员)                     |
 | POST   | /api/blogs/save              | [categoryName, title] \| id, content |                                            | 保存博客(仅限管理员)                       |
 | POST   | /api/blogs/incre-views-count | [categoryName, title] \| id          |                                            | 增加博客的浏览量                           |
